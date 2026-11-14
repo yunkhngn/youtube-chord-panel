@@ -4,7 +4,8 @@
   "description": "Chrome Side Panel extension displaying Hợp Âm Chuẩn chords alongside YouTube videos.",
   "scripts": {
     "build": "node scripts/package.js",
-    "generate-icons": "node scripts/generate-icons.js"
+    "generate-icons": "node scripts/generate-icons.js",
+    "generate-assets": "python3 scripts/generate-store-assets.py"
   },
   "author": "yunkhngn (https://github.com/yunkhngn)",
   "homepage": "https://github.com/yunkhngn/youtube-chord-panel",
