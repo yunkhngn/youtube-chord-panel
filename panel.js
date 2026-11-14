@@ -223,14 +223,17 @@ function cleanVideoTitle(raw) {
   // 7. Bỏ tất cả các loại dấu ngoặc kép / nháy trang trí
   title = title.replace(/["'“”‘’«»`]/g, " ");
 
-  // 8. Chuẩn hóa dấu phân tách ca sĩ - bài hát
-  title = title.replace(/\s+[-–—|]\s+/g, " ");
+  // 8. Chuẩn hóa dấu phân tách ca sĩ - bài hát (giữ lại dấu gạch ngang chuẩn " - ")
+  title = title.replace(/\s+[-–—|]\s+/g, " - ");
 
   // 9. Bỏ dấu chấm / gạch thừa ở đầu hoặc cuối chuỗi
   title = title.replace(/(^[\s.\-–—|]+|[\s.\-–—|]+$)/g, "");
 
   // 10. Gom khoảng trắng
   title = title.replace(/\s+/g, " ").trim();
+
+  // 11. Tránh lặp dấu gạch " - - "
+  title = title.replace(/\s*-\s*-\s*/g, " - ");
 
   return title;
 }

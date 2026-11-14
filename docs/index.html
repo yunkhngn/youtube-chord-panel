@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chord Side Panel - Hợp âm bên cạnh YouTube</title>
+    <meta
+      name="description"
+      content="Mở Hợp Âm Chuẩn và Ultimate Guitar trong Chrome Side Panel cạnh video YouTube, tự động lấy tên bài, cuộn tự động và chia cột 50|50."
+    />
+    <link rel="icon" type="image/png" href="icons/icon48.png" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="ambient-glow"></div>
+
+    <!-- Navigation -->
+    <header class="navbar">
+      <div class="container nav-container">
+        <a href="index.html" class="brand">
+          <img src="icons/icon48.png" alt="Chord Side Panel Logo" />
+          <span>Chord Side Panel</span>
+        </a>
+        <nav>
+          <ul class="nav-links">
+            <li><a href="#features">Tính năng</a></li>
+            <li><a href="#how-it-works">Cách dùng</a></li>
+            <li><a href="privacy.html">Quyền riêng tư</a></li>
+            <li>
+              <a href="https://chrome.google.com/webstore" class="btn btn-primary" target="_blank" rel="noopener">
+                Cài đặt Extension
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="badge">
+          <span>🎸 Chrome Side Panel Extension</span>
+          <span>•</span>
+          <span>100% Miễn phí & Mã nguồn mở</span>
+        </div>
+
+        <h1>
+          Vừa xem YouTube vừa nhìn hợp âm<br />
+          <span>ngay trên cùng một màn hình</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          Tận dụng tính năng Chrome Side Panel để mở <strong>Hợp Âm Chuẩn</strong> &amp; <strong>Ultimate Guitar</strong> bên cạnh video YouTube. Tự động nhận diện bài hát, chia 2 cột 50 | 50 và tự động cuộn trang giúp bạn rảnh tay đánh đàn.
+        </p>
+
+        <div class="hero-actions">
+          <a href="https://chrome.google.com/webstore" class="btn btn-primary" target="_blank" rel="noopener">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+            <span>Thêm vào Chrome (Free)</span>
+          </a>
+          <a href="privacy.html" class="btn btn-secondary">
+            <span>Chính sách quyền riêng tư</span>
+          </a>
+        </div>
+
+        <!-- Window Mockup -->
+        <div class="mockup-wrapper">
+          <div class="mockup-window">
+            <div class="mockup-header">
+              <div class="window-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="window-url">https://www.youtube.com/watch?v=tim-chu-ca-lo</div>
+            </div>
+
+            <div class="mockup-split">
+              <!-- Cột trái: YouTube Player Mockup -->
+              <div class="split-left">
+                <div class="video-player-preview">
+                  <div class="play-badge">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+                  </div>
+                </div>
+                <div class="video-info">
+                  <div class="video-title">"Tím" ft. Chí Hùng (Trước iPhone 18 Pro Max)</div>
+                  <div class="video-channel">Chú Cá Lơ • 128N lượt xem</div>
+                </div>
+              </div>
+
+              <!-- Cột phải: Side Panel Chord Viewer Mockup -->
+              <div class="split-right">
+                <div class="panel-preview-bar">
+                  <div style="display: flex; gap: 6px; align-items: center;">
+                    <span class="preview-pill">Hợp Âm Chuẩn</span>
+                    <strong style="font-size: 13px;">Tím - Thái Đinh / Chú Cá Lơ</strong>
+                  </div>
+                  <div class="preview-controls">
+                    <span class="control-pill active">▶ Cuộn 1x</span>
+                    <span class="control-pill active">☷ 50 | 50</span>
+                  </div>
+                </div>
+
+                <!-- 2 Cột hợp âm không bị overflow -->
+                <div class="chord-columns">
+                  <div>
+                    <div class="chord-line">về nó như một điều gì đó <span class="chord">[B]</span> cao và siêu</div>
+                    <div class="chord-line">Bác nhìn thấy <span class="chord">[E]</span> em bước lên và đi</div>
+                    <div class="chord-line">vòng quanh bàn trong màu <span class="chord">[E7]</span> xanh</div>
+                    <div class="chord-line">Có thật nhiều bài hát nói <span class="chord">[B]</span> về màu xanh</div>
+                    <div class="chord-line">Màu xanh là huyền bí <span class="chord">[B]</span></div>
+                    <div class="chord-line">Ở bên trong điệu nhảy màu tím ấy</div>
+                  </div>
+                  <div>
+                    <div class="chord-line">chán thì hãy lấy xanh cộng đỏ <span class="chord">[B]</span> trộn thêm</div>
+                    <div class="chord-line">Mình gà sẽ thấy anh <span class="chord">[E]</span> đứng ở đó</div>
+                    <div class="chord-line">xong rồi lại thắc mắc như thế <span class="chord">[E7]</span> này</div>
+                    <div class="chord-line">Làm như thế? <span class="chord">[B]</span> Tại sao mình</div>
+                    <div class="chord-line">không còn thấy đau?</div>
+                    <div class="chord-line">ở phía <span class="chord">[E7]</span> sau...</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-header">
+          <h2>Tính năng thiết kế riêng cho người chơi đàn</h2>
+          <p>Mọi chi tiết đều được tối ưu hóa để bạn không bị phân tâm khi đang cầm đàn trên tay.</p>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg>
+            </div>
+            <h3>Tự động nhận diện bài hát</h3>
+            <p>1-Click lấy tên bài từ tab YouTube. Bộ lọc thông minh tự động loại bỏ các từ khóa rác: (Official MV), [Lyrics], ft. nghệ sĩ, dấu nháy kép để tìm ra bản hợp âm chính xác nhất.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/></svg>
+            </div>
+            <h3>Bố cục Chia cột 50 | 50</h3>
+            <p>Khắc phục hoàn toàn lỗi tràn mép ngang hoặc mất chữ đầu câu trong Side Panel hẹp. Hợp âm được chia 2 cột song song đều đặn, nhìn được toàn bài mà không bị che khuất.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </div>
+            <h3>Cuộn tự động (Auto-Scroll)</h3>
+            <p>Chế độ cuộn mượt mà rảnh tay đánh đàn với 4 mức tốc độ (0.5x, 1x, 1.5x, 2x). Bạn không bao giờ phải bỏ tay khỏi cần đàn để cuộn trang.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            </div>
+            <h3>Auto-Sync Playlist</h3>
+            <p>Nghe nhạc theo danh sách phát? Bật tính năng Auto-Sync để tiện ích tự động phát hiện và mở hợp âm bài hát tiếp theo ngay khi video YouTube chuyển bài.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <h3>Hỗ trợ 2 nguồn hợp âm lớn</h3>
+            <p>Chuyển đổi tức thì giữa <strong>Hợp Âm Chuẩn</strong> (thư viện nhạc Việt lớn nhất) và <strong>Ultimate Guitar</strong> (thư viện quốc tế số 1 thế giới).</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>100% Bảo mật &amp; Cục bộ</h3>
+            <p>Không có máy chủ trung gian, không thu thập cookie hay lịch sử duyệt web. Dữ liệu cài đặt và lịch sử chỉ lưu trữ cục bộ trên máy tính của bạn.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="section" id="how-it-works" style="background: rgba(17, 24, 39, 0.4); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+      <div class="container">
+        <div class="section-header">
+          <h2>Cách sử dụng trong 3 bước</h2>
+          <p>Cài đặt một lần, sử dụng thuận tiện mãi mãi.</p>
+        </div>
+
+        <div class="steps-wrapper">
+          <div class="step-card">
+            <div class="step-number">01</div>
+            <h4>Cài đặt tiện ích</h4>
+            <p>Cài đặt Chord Side Panel từ Chrome Web Store và ghim biểu tượng lên thanh công cụ trình duyệt.</p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">02</div>
+            <h4>Mở video YouTube</h4>
+            <p>Mở bài hát, backing track hoặc video hướng dẫn guitar bạn yêu thích trên YouTube hoặc YouTube Music.</p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">03</div>
+            <h4>Bấm Alt + C</h4>
+            <p>Nhấn phím tắt <strong>Alt + C</strong> (hoặc <strong>Option + C</strong> trên macOS) để mở Side Panel hợp âm và bắt đầu tập đàn!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container footer-container">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <img src="icons/icon32.png" width="24" height="24" alt="logo" />
+          <span>&copy; 2026 Chord Side Panel. Tất cả các quyền được bảo lưu.</span>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">Trang chủ</a>
+          <a href="privacy.html">Chính sách quyền riêng tư</a>
+          <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

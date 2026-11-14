@@ -1,9 +1,9 @@
-// Cho phép nhúng 2 trang hợp âm vào iframe của side panel bằng cách gỡ
-// X-Frame-Options / CSP khỏi response của sub_frame. Chỉ áp dụng cho các domain
-// bên dưới và chỉ khi request xuất phát từ extension này hoặc từ chính các domain đó
+// Cho phép nhúng Hợp Âm Chuẩn vào iframe của side panel bằng cách gỡ
+// X-Frame-Options / CSP khỏi response của sub_frame. Chỉ áp dụng cho hopamchuan.com
+// và chỉ khi request xuất phát từ extension này hoặc từ chính hopamchuan.com
 // (cần cho việc bấm link bên trong iframe). Điều hướng top-level không bị đụng tới.
 
-const CHORD_DOMAINS = ["hopamchuan.com", "ultimate-guitar.com"];
+const CHORD_DOMAINS = ["hopamchuan.com"];
 const RULE_ID = 1;
 
 async function installFrameRules() {

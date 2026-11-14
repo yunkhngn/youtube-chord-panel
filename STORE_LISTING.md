@@ -113,7 +113,8 @@ Khi nộp extension lên Chrome Web Store, tại mục **Privacy > Justification
    - Thêm ít nhất 1 ảnh chụp màn hình (1280x800 hoặc 640x400) chụp màn hình YouTube bên trái và Side panel bên phải.
    - Chọn Category: **Fun** (hoặc **Productivity / Tools**).
 4. **Điền Privacy:**
-   - Dán URL Privacy Policy (ví dụ đưa file `PRIVACY_POLICY.md` lên GitHub Pages hoặc gist công khai).
+   - Bật GitHub Pages cho repo: Vào **Settings > Pages > Build and deployment > Branch: main /docs** -> Bấm Save.
+   - URL Privacy Policy của bạn sẽ là: `https://<username>.github.io/<repo-name>/privacy.html` (điền link này vào ô Privacy Policy).
    - Dán các đoạn giải trình ở mục 3 vào các ô quyền tương ứng.
 5. **Nhấn "Submit for Review":**
    - Thông thường Google sẽ duyệt trong vòng 24 - 48 giờ.

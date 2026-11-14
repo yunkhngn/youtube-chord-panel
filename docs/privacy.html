@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chính sách quyền riêng tư - Chord Side Panel</title>
+    <meta
+      name="description"
+      content="Chính sách bảo mật và quyền riêng tư của tiện ích mở rộng Chrome Chord Side Panel."
+    />
+    <link rel="icon" type="image/png" href="icons/icon48.png" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="ambient-glow"></div>
+
+    <!-- Navigation -->
+    <header class="navbar">
+      <div class="container nav-container">
+        <a href="index.html" class="brand">
+          <img src="icons/icon48.png" alt="Chord Side Panel Logo" />
+          <span>Chord Side Panel</span>
+        </a>
+        <nav>
+          <ul class="nav-links">
+            <li><a href="index.html">Trang chủ</a></li>
+            <li><a href="index.html#features">Tính năng</a></li>
+            <li><a href="privacy.html" class="active">Quyền riêng tư</a></li>
+            <li>
+              <a href="https://chrome.google.com/webstore" class="btn btn-primary" target="_blank" rel="noopener">
+                Cài đặt
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+      <div class="privacy-wrapper">
+        <h1>Chính sách Quyền riêng tư (Privacy Policy)</h1>
+        <div class="privacy-date">Cập nhật lần cuối: Ngày 14 tháng 11 năm 2026</div>
+
+        <div class="callout">
+          <strong>Cam kết bảo mật:</strong> Tiện ích <strong>Chord Side Panel</strong> không thu thập, không lưu trữ trên máy chủ từ xa và không bao giờ bán dữ liệu cá nhân hay lịch sử duyệt web của bạn cho bất kỳ bên thứ ba nào.
+        </div>
+
+        <div class="privacy-content">
+          <h2>1. Giới thiệu</h2>
+          <p>
+            Chính sách quyền riêng tư này giải thích cách tiện ích mở rộng <strong>Chord Side Panel</strong> ("Tiện ích", "chúng tôi") xử lý thông tin của bạn khi bạn sử dụng tiện ích trên trình duyệt Google Chrome.
+          </p>
+
+          <h2>2. Dữ liệu chúng tôi KHÔNG thu thập</h2>
+          <p>Chord Side Panel được thiết kế theo triết lý bảo vệ quyền riêng tư tối đa:</p>
+          <ul>
+            <li><strong>Không thu thập thông tin nhận dạng cá nhân:</strong> Chúng tôi không thu thập họ tên, địa chỉ email, số điện thoại, địa chỉ IP hay thông tin tài khoản của bạn.</li>
+            <li><strong>Không theo dõi lịch sử duyệt web:</strong> Tiện ích không theo dõi các trang web bạn truy cập. Quyền truy cập vào YouTube chỉ được sử dụng khi bạn bấm nút tìm kiếm hoặc bật tính năng đồng bộ để trích xuất tên bài hát đang phát.</li>
+            <li><strong>Không sử dụng máy chủ theo dõi (No Tracking Servers):</strong> Tiện ích không kết nối với bất kỳ máy chủ phân tích (analytics), theo dõi (tracking) hay quảng cáo từ bên thứ ba nào.</li>
+          </ul>
+
+          <h2>3. Lưu trữ cục bộ (Local Storage)</h2>
+          <p>
+            Tiện ích sử dụng API <code>chrome.storage.local</code> của trình duyệt Chrome để lưu trữ một số cài đặt trên máy tính cá nhân của bạn, bao gồm:
+          </p>
+          <ul>
+            <li>Nguồn hợp âm bạn chọn (Hợp Âm Chuẩn hoặc Ultimate Guitar).</li>
+            <li>Tùy chọn tốc độ cuộn tự động ưa thích (0.5x, 1x, 1.5x, 2x).</li>
+            <li>Trạng thái bật/tắt của chế độ chia 2 cột 50 | 50.</li>
+            <li>Danh sách lịch sử bài hát đã tìm gần đây (tối đa 20 bài) để bạn tiện mở lại.</li>
+          </ul>
+          <p>
+            Tất cả dữ liệu trên được lưu trữ <strong>hoàn toàn nội bộ</strong> trên thiết bị của bạn và không bao giờ được gửi qua internet. Bạn có thể xóa lịch sử này bất kỳ lúc nào bằng nút "Xóa hết" trong giao diện tiện ích.
+          </p>
+
+          <h2>4. Giải trình chi tiết về các quyền hạn được yêu cầu (Permissions)</h2>
+          <p>Tiện ích yêu cầu các quyền hạn sau trong <code>manifest.json</code> và tuân thủ nghiêm ngặt nguyên tắc chỉ sử dụng đúng mục đích cốt lõi:</p>
+
+          <ul>
+            <li>
+              <strong><code>sidePanel</code>:</strong> Cho phép hiển thị giao diện hợp âm trực tiếp trong thanh Side Panel của Chrome, giúp bạn theo dõi hợp âm song song với video YouTube mà không cần chia cửa sổ.
+            </li>
+            <li>
+              <strong><code>declarativeNetRequest</code>:</strong> Cho phép gỡ bỏ các tiêu đề phản hồi giới hạn nhúng iframe (<code>X-Frame-Options</code> và <code>Content-Security-Policy</code>) của các trang hợp âm (<code>hopamchuan.com</code> và <code>ultimate-guitar.com</code>). Quyền này chỉ áp dụng đối với các yêu cầu sub_frame xuất phát từ chính tiện ích, tuyệt đối không ảnh hưởng đến các tác vụ duyệt web thông thường.
+            </li>
+            <li>
+              <strong><code>storage</code>:</strong> Dùng để ghi nhớ các tùy chọn cá nhân và danh sách bài hát gần đây của bạn vào bộ nhớ cục bộ.
+            </li>
+            <li>
+              <strong><code>host_permissions</code>:</strong>
+              <ul>
+                <li><code>https://*.youtube.com/*</code> &amp; <code>https://music.youtube.com/*</code>: Cho phép đọc tiêu đề video của tab YouTube đang phát để tự động điền tên bài hát vào ô tìm kiếm.</li>
+                <li><code>https://*.hopamchuan.com/*</code> &amp; <code>https://*.ultimate-guitar.com/*</code>: Cho phép nhúng và áp dụng kiểu dáng tối ưu (loại bỏ quảng cáo, chia 2 cột) cho trang hợp âm trong khung Side Panel.</li>
+              </ul>
+            </li>
+          </ul>
+
+          <h2>5. Dịch vụ của bên thứ ba</h2>
+          <p>
+            Khi bạn tìm kiếm hợp âm, nội dung bảng hợp âm được tải trực tiếp giữa trình duyệt của bạn và các nhà cung cấp hợp âm (Hợp Âm Chuẩn hoặc Ultimate Guitar). Các dịch vụ này hoạt động theo chính sách quyền riêng tư độc lập của họ:
+          </p>
+          <ul>
+            <li>Chính sách của Hợp Âm Chuẩn: <a href="https://hopamchuan.com" target="_blank" rel="noopener" style="color: var(--accent);">hopamchuan.com</a></li>
+            <li>Chính sách của Ultimate Guitar: <a href="https://www.ultimate-guitar.com" target="_blank" rel="noopener" style="color: var(--accent);">ultimate-guitar.com</a></li>
+          </ul>
+
+          <h2>6. Tuân thủ chính sách Chrome Web Store (Limited Use Policy)</h2>
+          <p>
+            Việc sử dụng thông tin của Chord Side Panel tuân thủ đầy đủ <a href="https://developer.chrome.com/docs/webstore/program-policies/" target="_blank" rel="noopener" style="color: var(--accent);">Chính sách Chương trình Nhà phát triển của Chrome Web Store</a>, bao gồm các yêu cầu về Sử dụng Hạn chế (Limited Use requirements).
+          </p>
+
+          <h2>7. Thay đổi chính sách</h2>
+          <p>
+            Nếu có bất kỳ thay đổi nào trong tương lai đối với chính sách quyền riêng tư này, bản cập nhật sẽ được đăng công khai trên trang web này cùng với ngày sửa đổi tương ứng.
+          </p>
+
+          <h2>8. Liên hệ</h2>
+          <p>
+            Nếu bạn có bất kỳ câu hỏi hoặc phản hồi nào về chính sách quyền riêng tư này, vui lòng mở issue trên kho mã nguồn GitHub của dự án.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container footer-container">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <img src="icons/icon32.png" width="24" height="24" alt="logo" />
+          <span>&copy; 2026 Chord Side Panel. Tất cả các quyền được bảo lưu.</span>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">Trang chủ</a>
+          <a href="privacy.html">Chính sách quyền riêng tư</a>
+          <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
