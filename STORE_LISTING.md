@@ -1,76 +1,76 @@
 # Chrome Web Store Listing & Submission Guide
 
-Tai lieu nay chua toan bo noi dung can dien khi dua Chord Side Panel len Chrome Web Store Developer Dashboard.
+Tài liệu này chứa toàn bộ nội dung cần điền khi đưa Chord Side Panel lên Chrome Web Store Developer Dashboard.
 
 ---
 
-## 1. Thong tin co ban (Basic Information)
+## 1. Thông tin cơ bản (Basic Information)
 
-### Ten Extension (Extension Name)
+### Tên Extension (Extension Name)
 ```text
-Chord Side Panel - Hop am ben canh YouTube
+Chord Side Panel - Hợp âm bên cạnh YouTube
 ```
 
-### Mo ta ngan (Summary / Short Description - Toi da 132 ky tu)
+### Mô tả ngắn (Summary / Short Description - Tối đa 132 ký tự)
 ```text
-Mo Hop Am Chuan trong side panel canh video YouTube, tu dong bat ten bai, cuon tu dong va chia 2 cot.
+Mở Hợp Âm Chuẩn trong side panel cạnh video YouTube, tự động bắt tên bài, cuộn tự động và chia 2 cột.
 ```
 
 ---
 
-## 2. Mo ta chi tiet (Detailed Description)
+## 2. Mô tả chi tiết (Detailed Description)
 
 ```text
-Chord Side Panel - Giai phap xem hop am toi uu khi xem YouTube tren Chrome.
+Chord Side Panel - Giải pháp xem hợp âm tối ưu khi xem YouTube trên Chrome.
 
-Ban vua xem backing track, MV hay video huong dan guitar tren YouTube vua muon nhin hop am ben canh ma khong phai chia doi cua so thu cong hay cam dien thoai? Chord Side Panel se tan dung tinh nang Chrome Side Panel de hien thi bang hop am ngay ben hong video YouTube cua ban.
+Bạn vừa xem backing track, MV hay video hướng dẫn guitar trên YouTube vừa muốn nhìn hợp âm bên cạnh mà không phải chia đôi cửa sổ thủ công hay cầm điện thoại? Chord Side Panel sẽ tận dụng tính năng Chrome Side Panel để hiển thị bảng hợp âm ngay bên hông video YouTube của bạn.
 
-CAC TINH NANG NOI BAT:
+CÁC TÍNH NĂNG NỔI BẬT:
 
-1. Tu dong nhan dien bai hat thong minh:
-- Tu dong lay ten bai hat tu tab YouTube / YouTube Music dang phat chi voi 1 click.
-- Tu dong loc sach cac tu khoa thua nhu (Official MV), (Lyrics), (Audio), dau ngoac kep, nghe si ft.,... de tim ra ban hop am chinh xac nhat.
-- Giu nguyen dau gach ngang phan tach chuan "Ca si - Ten bai" (vi du: Tung - Chuon Chuon).
-- Che do "Auto Sync": Tu dong cap nhat hop am moi khi ban chuyen bai trong playlist YouTube.
+1. Tự động nhận diện bài hát thông minh:
+- Tự động lấy tên bài hát từ tab YouTube / YouTube Music đang phát chỉ với 1 click.
+- Tự động lọc sạch các từ khóa thừa như (Official MV), (Lyrics), (Audio), dấu ngoặc kép, nghệ sĩ ft.,... để tìm ra bản hợp âm chính xác nhất.
+- Giữ nguyên dấu gạch ngang phân tách chuẩn "Ca sĩ - Tên bài" (ví dụ: Tùng - Chuồn Chuồn).
+- Chế độ "Auto Sync": Tự động cập nhật hợp âm mới khi bạn chuyển bài trong playlist YouTube.
 
-2. Tu dong cuon trang (Auto-Scroll) ranh tay danh dan:
-- Bat/tat cuon muot ma voi nhieu muc toc do (0.5x, 1x, 1.5x, 2x).
-- Ban hoan toan ranh ca hai tay de bam phim va gay dan ma khong can voi tay cham chuot.
+2. Tự động cuộn trang (Auto-Scroll) rảnh tay đánh đàn:
+- Bật/tắt cuộn mượt mà với nhiều mức tốc độ (0.5x, 1x, 1.5x, 2x).
+- Bạn hoàn toàn rảnh cả hai tay để bấm phím và gảy đàn mà không cần với tay chạm chuột.
 
-3. Bo cuc Chia cot 50 | 50 (Clean 2-Column View):
-- Toi uu hoa giao dien cho khung Side Panel hep: triet tieu hoan toan tinh trang tran ngang (horizontal overflow) hoac lem mat chu dau dong.
-- Tu dong chia hop am thanh 2 cot song song deu dan, nhin duoc toan bo bai hat ma khong bi che khuat.
+3. Bố cục Chia cột 50 | 50 (Clean 2-Column View):
+- Tối ưu hóa giao diện cho khung Side Panel hẹp: triệt tiêu hoàn toàn tình trạng tràn ngang (horizontal overflow) hoặc lẹm mất chữ đầu dòng.
+- Tự động chia hợp âm thành 2 cột song song đều đặn, nhìn được toàn bộ bài hát mà không bị che khuất.
 
-4. Giao dien sach se (Ad-free & Clutter-free Reader Mode):
-- Tu dong an bot cac thanh menu cong kenh, banner quang cao, thong bao rac cua trang hop am de danh toi da dien tich cho phan loi va the bam.
+4. Giao diện sạch sẽ (Ad-free & Clutter-free Reader Mode):
+- Tự động ẩn bớt các thanh menu cồng kềnh, banner quảng cáo, thông báo rác của trang hợp âm để dành tối đa diện tích cho phần lời và thế bấm.
 
-5. Toi uu rieng cho Hop Am Chuan:
-- Tuong thich hoan hao voi Hop Am Chuan (thu vien hop am bai hat Viet lon nhat).
-- Day du tone, dieu bai hat va the bam hop am chuan xac.
+5. Tối ưu riêng cho Hợp Âm Chuẩn:
+- Tương thích hoàn hảo với Hợp Âm Chuẩn (thư viện hợp âm bài hát Việt lớn nhất).
+- Đầy đủ tone, điệu bài hát và thế bấm hợp âm chuẩn xác.
 
-6. Lich su bai da xem:
-- Luu lai cac bai da tim gan nhat de ban mo lai tuc thi bat cu luc nao.
+6. Lịch sử bài đã xem:
+- Lưu lại các bài đã tìm gần nhất để bạn mở lại tức thì bất cứ lúc nào.
 
-7. Phim tat tien loi:
-- Nhan Alt + C (hoac Option + C tren macOS) de mo hoac dong nhanh Side Panel.
+7. Phím tắt tiện lợi:
+- Nhấn Alt + C (hoặc Option + C trên macOS) để mở hoặc đóng nhanh Side Panel.
 
-BAO MAT & QUYEN RIENG TU:
-- Tien ich hoat dong 100% tai may cua ban (Client-side).
-- Khong thu thap, khong theo doi va khong luu tru bat ky du lieu ca nhan nao cua nguoi dung.
-- Ma nguon mo va hoan toan mien phi.
+BẢO MẬT & QUYỀN RIÊNG TƯ:
+- Tiện ích hoạt động 100% tại máy của bạn (Client-side).
+- Không thu thập, không theo dõi và không lưu trữ bất kỳ dữ liệu cá nhân nào của người dùng.
+- Mã nguồn mở và hoàn toàn miễn phí.
 
-TAC GIA & LIEN HE:
-- Phat trien boi: @yunkhngn
+TÁC GIẢ & LIÊN HỆ:
+- Phát triển bởi: @yunkhngn
 - GitHub: https://github.com/yunkhngn
 - Facebook: https://www.facebook.com/yun.khngn/
-- Ung ho tac gia: https://buymeacoffee.com/yunkhngn
+- Ủng hộ tác giả: https://buymeacoffee.com/yunkhngn
 ```
 
 ---
 
-## 3. Ban giai trinh quyen cho Google Reviewers (Permissions Justification)
+## 3. Bản giải trình quyền cho Google Reviewers (Permissions Justification)
 
-Khi nop extension len Chrome Web Store, tai muc Privacy > Justification for permissions, ban hay sao chep cac doan van ban tieng Anh chuan duoi day dan vao tung o tuong ung:
+Khi nộp extension lên Chrome Web Store, tại mục Privacy > Justification for permissions, bạn hãy sao chép các đoạn văn bản tiếng Anh chuẩn dưới đây dán vào từng ô tương ứng:
 
 ### 1. `sidePanel`
 > **Justification:**  
@@ -91,36 +91,36 @@ Khi nop extension len Chrome Web Store, tai muc Privacy > Justification for perm
 
 ---
 
-## 4. Privacy Practices Tab (Khai bao du lieu nguoi dung)
+## 4. Privacy Practices Tab (Khai báo dữ liệu người dùng)
 
 - **Single Purpose Description:**  
   *Displaying musical chords in the Chrome Side Panel alongside YouTube videos.*
 - **Host permissions justification:**  
   *See section 3 above.*
 - **Data Usage:**
-  - Chon "I do not collect or use any user data".
-  - Tich chon tat ca cac cam ket:
+  - Chọn "I do not collect or use any user data".
+  - Tích chọn tất cả các cam kết:
     - [x] Does not sell user data to third parties.
     - [x] Does not use or transfer user data for purposes unrelated to the item's core functionality.
     - [x] Does not use or transfer user data to determine creditworthiness or for lending purposes.
 
 ---
 
-## 5. Quy trinh nop len Chrome Web Store (Checklist)
+## 5. Quy trình nộp lên Chrome Web Store (Checklist)
 
-1. **Chuan bi tai khoan:**
-   - Truy cap: Chrome Web Store Developer Dashboard (https://chrome.google.com/webstore/devconsole)
-   - Neu chua co tai khoan developer, thanh toan phi dang ky 1 lan la $5 USD qua Google Pay.
+1. **Chuẩn bị tài khoản:**
+   - Truy cập: Chrome Web Store Developer Dashboard (https://chrome.google.com/webstore/devconsole)
+   - Nếu chưa có tài khoản developer, thanh toán phí đăng ký 1 lần là $5 USD qua Google Pay.
 2. **Upload Package:**
-   - Nhan New Item (Muc moi).
-   - Keo tha file chord-side-panel-v0.2.0.zip da duoc dong goi san.
-3. **Dien thong tin Listing:**
-   - Copy tieu de, mo ta ngan, mo ta chi tiet tu muc 1 va 2 o tren.
-   - Them it nhat 1 anh chup man hinh (1280x800 hoac 640x400) chup man hinh YouTube ben trai va Side panel ben phai.
-   - Chon Category: Fun (hoac Productivity / Tools).
-4. **Dien Privacy:**
-   - Bat GitHub Pages cho repo: Vao Settings > Pages > Build and deployment > Branch: main /docs -> Bam Save.
-   - URL Privacy Policy cua ban se la: https://yunkhngn.github.io/youtube-chord-panel/privacy.html (dien link nay vao o Privacy Policy).
-   - Dan cac doan giai trinh o muc 3 vao cac o quyen tuong ung.
-5. **Nhan "Submit for Review":**
-   - Thong thuong Google se duyet trong vong 24 - 48 gio.
+   - Nhấn New Item (Mục mới).
+   - Kéo thả file chord-side-panel-v0.2.0.zip đã được đóng gói sẵn.
+3. **Điền thông tin Listing:**
+   - Copy tiêu đề, mô tả ngắn, mô tả chi tiết từ mục 1 và 2 ở trên.
+   - Thêm ít nhất 1 ảnh chụp màn hình (1280x800 hoặc 640x400) chụp màn hình YouTube bên trái và Side panel bên phải.
+   - Chọn Category: Fun (hoặc Productivity / Tools).
+4. **Điền Privacy:**
+   - Bật GitHub Pages cho repo: Vào Settings > Pages > Build and deployment > Branch: main /docs -> Bấm Save.
+   - URL Privacy Policy của bạn sẽ là: https://yunkhngn.github.io/youtube-chord-panel/privacy.html (điền link này vào ô Privacy Policy).
+   - Dán các đoạn giải trình ở mục 3 vào các ô quyền tương ứng.
+5. **Nhấn "Submit for Review":**
+   - Thông thường Google sẽ duyệt trong vòng 24 - 48 giờ.

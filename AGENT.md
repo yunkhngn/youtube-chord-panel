@@ -1,109 +1,109 @@
-# Huong dan Phat trien Du an danh cho AI Agent (AGENT.md)
+# Hướng dẫn Phát triển Dự án dành cho AI Agent (AGENT.md)
 
-Tai lieu nay la bo quy chuan va chi dan hanh dong bat buoc danh cho bat ky AI Agent nao tham gia phat trien, bao tri hoac phat hanh phien ban moi cho du an Chord Side Panel.
-
----
-
-## 1. Triet ly kien truc du an
-
-* **Nen tang:** Google Chrome Extension Manifest V3.
-* **Cong nghe:** JavaScript thuan (Vanilla JS), CSS thuan, khong dung bundler (Webpack/Vite/Rollup) hay framework nang ne nham dam bao toc do khoi dong tuc thi trong Chrome Side Panel.
-* **Nguyen tac quyen han toi thieu (Least Privilege):** 
-  * Chi su dung quyen that su can thiet (sidePanel, declarativeNetRequest, storage).
-  * host_permissions chi gioi han cho hopamchuan.com va youtube.com.
-  * Tuyet doi khong them <all_urls> hoac xin quyen tabs rong neu khong co yeu cau dac biet.
+Tài liệu này là bộ quy chuẩn và chỉ dẫn hành động bắt buộc dành cho bất kỳ AI Agent nào tham gia phát triển, bảo trì hoặc phát hành phiên bản mới cho dự án Chord Side Panel.
 
 ---
 
-## 2. Quy tac bat buoc (Golden Rules)
+## 1. Triết lý kiến trúc dự án
 
-### QUY TAC 1: XIN PHEP USER TRUOC KHI TAO GITHUB RELEASE BANG CLI
-> **NGHIEM CAM:** AI Agent **TUYET DOI KHONG DUOC TU Y** chay lenh `gh release create` khi chua co su xac nhan / dong y ro rang tu User.
+* **Nền tảng:** Google Chrome Extension Manifest V3.
+* **Công nghệ:** JavaScript thuần (Vanilla JS), CSS thuần, không dùng bundler (Webpack/Vite/Rollup) hay framework nặng nề nhằm đảm bảo tốc độ khởi động tức thì trong Chrome Side Panel.
+* **Nguyên tắc quyền hạn tối thiểu (Least Privilege):** 
+  * Chỉ sử dụng quyền thật sự cần thiết (sidePanel, declarativeNetRequest, storage).
+  * host_permissions chỉ giới hạn cho hopamchuan.com và youtube.com.
+  * Tuyệt đối không thêm <all_urls> hoặc xin quyền tabs rộng nếu không có yêu cầu đặc biệt.
+
+---
+
+## 2. Quy tắc bắt buộc (Golden Rules)
+
+### QUY TẮC 1: XIN PHÉP USER TRƯỚC KHI TẠO GITHUB RELEASE BẰNG CLI
+> **NGHIÊM CẤM:** AI Agent **TUYỆT ĐỐI KHÔNG ĐƯỢC TỰ Ý** chạy lệnh `gh release create` khi chưa có sự xác nhận / đồng ý rõ ràng từ User.
 >
-> **Quy trinh chuan:**
-> 1. Khi hoan thanh cac thay doi, Agent phai tom tat cac tinh nang/sua loi da lam.
-> 2. Dua ra so phien ban du kien (vi du: v0.2.0).
-> 3. Hoi User: "Toi da chuan bi xong phien ban v0.2.0 va file zip. Ban co dong y chot phien ban nay de toi tao GitHub Release qua CLI khong?"
-> 4. **CHI KHI** User phan hoi dong y (vi du: "Ok", "Tao di", "Chot di"), Agent moi duoc thuc thi lenh `gh release create`.
+> **Quy trình chuẩn:**
+> 1. Khi hoàn thành các thay đổi, Agent phải tóm tắt các tính năng/sửa lỗi đã làm.
+> 2. Đưa ra số phiên bản dự kiến (ví dụ: v0.2.0).
+> 3. Hỏi User: "Tôi đã chuẩn bị xong phiên bản v0.2.0 và file zip. Bạn có đồng ý chốt phiên bản này để tôi tạo GitHub Release qua CLI không?"
+> 4. **CHỈ KHI** User phản hồi đồng ý (ví dụ: "Ok", "Tạo đi", "Chốt đi"), Agent mới được thực thi lệnh `gh release create`.
 
-### QUY TAC 2: LUON BUILD RA FILE ZIP SAU KHI CAP NHAT PHIEN BAN
-* Moi khi co thay doi lien quan den phien ban moi (bump version), Agent **bat buoc** phai chay lenh build goi zip:
+### QUY TẮC 2: LUÔN BUILD RA FILE ZIP SAU KHI CẬP NHẬT PHIÊN BẢN
+* Mỗi khi có thay đổi liên quan đến phiên bản mới (bump version), Agent **bắt buộc** phải chạy lệnh build gói zip:
   ```bash
   npm run build
-  # hoac
+  # hoặc
   node scripts/package.js
   ```
-* File zip duoc sinh ra se co ten theo dinh dang: chord-side-panel-v{version}.zip (vi du: chord-side-panel-v0.2.0.zip).
-* **Kiem tra do sach cua file zip:** Dam bao file zip chi chua cac file chay extension (manifest.json, background.js, panel.html, panel.css, panel.js, content/, icons/). Tuyet doi **khong duoc chua** .git, .DS_Store, thu muc /docs, /scripts, file markdown *.md.
+* File zip được sinh ra sẽ có tên theo định dạng: chord-side-panel-v{version}.zip (ví dụ: chord-side-panel-v0.2.0.zip).
+* **Kiểm tra độ sạch của file zip:** Đảm bảo file zip chỉ chứa các file chạy extension (manifest.json, background.js, panel.html, panel.css, panel.js, content/, icons/). Tuyệt đối **không được chứa** .git, .DS_Store, thư mục /docs, /scripts, file markdown *.md.
 
-### QUY TAC 3: CAP NHAT CHANGELOG.MD
-* Moi phien ban moi deu phai duoc ghi nhan vao file CHANGELOG.md.
-* Cau truc trong CHANGELOG.md phai co:
-  1. **Doan tom tat ngan gon:** De User chi can copy & paste ngay vao o mo ta cua Chrome Web Store.
-  2. **Chi tiet thay doi day du:** Bao gom cac muc Features (Tinh nang moi) va Fixes (Sua loi) de lam Release Notes tren GitHub.
+### QUY TẮC 3: CẬP NHẬT CHANGELOG.MD
+* Mọi phiên bản mới đều phải được ghi nhận vào file CHANGELOG.md.
+* Cấu trúc trong CHANGELOG.md phải có:
+  1. **Đoạn tóm tắt ngắn gọn:** Để User chỉ cần copy & paste ngay vào ô mô tả của Chrome Web Store.
+  2. **Chi tiết thay đổi đầy đủ:** Bao gồm các mục Features (Tính năng mới) và Fixes (Sửa lỗi) để làm Release Notes trên GitHub.
 
-### QUY TAC 4: TUYET DOI KHONG SU DUNG EMOJI
-* Trong toan bo ma nguon, commit message, changelog, documentation va cau tra loi voi nguoi dung: **KHONG DUOC SU DUNG BAT KY EMOJI NAO**.
+### QUY TẮC 4: TUYỆT ĐỐI KHÔNG SỬ DỤNG EMOJI
+* Trong toàn bộ mã nguồn, commit message, changelog, documentation và câu trả lời với người dùng: **KHÔNG ĐƯỢC SỬ DỤNG BẤT KỲ EMOJI NÀO**. Viết tiếng Việt có dấu đầy đủ, chuẩn ngữ pháp, nghiêm túc và chuyên nghiệp.
 
 ---
 
-## 3. Quy trinh tung buoc khi cap nhat phien ban moi (Release Workflow)
+## 3. Quy trình từng bước khi cập nhật phiên bản mới (Release Workflow)
 
-Khi User yeu cau nang cap tinh nang, sua loi hoac phat hanh phien ban moi, Agent hay tuan thu quy trinh 7 buoc sau:
+Khi User yêu cầu nâng cấp tính năng, sửa lỗi hoặc phát hành phiên bản mới, Agent hãy tuân thủ quy trình 7 bước sau:
 
-### Buoc 1: Trien khai Code & Kiem tra
-* Chinh sua cac file ma nguon lien quan.
-* Dam bao tinh nang khong lam pha vo logic cu:
-  * Khong lam tran le ngang (overflow) tren giao dien Side Panel.
-  * Giu nguyen logic lam sach tieu de cleanVideoTitle() (giu dau gach " - " giua ca si va bai hat, giai ma entities, bo ft., bo nhay kep).
+### Bước 1: Triển khai Code & Kiểm tra
+* Chỉnh sửa các file mã nguồn liên quan.
+* Đảm bảo tính năng không làm phá vỡ logic cũ:
+  * Không làm tràn lề ngang (overflow) trên giao diện Side Panel.
+  * Giữ nguyên logic làm sạch tiêu đề cleanVideoTitle() (giữ dấu gạch " - " giữa ca sĩ và bài hát, giải mã entities, bỏ ft., bỏ nháy kép).
 
-### Buoc 2: Tang so Version (Version Bump)
-* Cap nhat "version" trong manifest.json (theo chuan SemVer: x.y.z).
-* Dong bo "version" trong package.json.
+### Bước 2: Tăng số Version (Version Bump)
+* Cập nhật "version" trong manifest.json (theo chuẩn SemVer: x.y.z).
+* Đồng bộ "version" trong package.json.
 
-### Buoc 3: Cap nhat tai lieu
-* Them thong tin phien ban moi vao dau file CHANGELOG.md.
-* Neu co thay doi quyen han hoac tinh nang lon, cap nhat STORE_LISTING.md va thu muc docs/.
+### Bước 3: Cập nhật tài liệu
+* Thêm thông tin phiên bản mới vào đầu file CHANGELOG.md.
+* Nếu có thay đổi quyền hạn hoặc tính năng lớn, cập nhật STORE_LISTING.md và thư mục docs/.
 
-### Buoc 4: Dong goi ban Release
-* Chay script build:
+### Bước 4: Đóng gói bản Release
+* Chạy script build:
   ```bash
   npm run build
   ```
-* Kiem tra kich thuoc va danh sach file trong file zip vua tao:
+* Kiểm tra kích thước và danh sách file trong file zip vừa tạo:
   ```bash
   unzip -l chord-side-panel-v*.zip
   ```
 
-### Buoc 5: Commit Git
-* Commit cac thay doi voi message ro rang:
+### Bước 5: Commit Git
+* Commit các thay đổi với message rõ ràng:
   ```bash
   git add .
   git commit -m "chore(release): bump version to vX.Y.Z"
   git push origin main
   ```
 
-### Buoc 6: Xin xac nhan tu User
-* Bao cao cho User cac noi dung da hoan thanh.
-* Cung cap doan changelog ngan de User chuan bi cap nhat tren Chrome Web Store Developer Dashboard.
-* **Hoi xin phep xac nhan de tao GitHub Release.**
+### Bước 6: Xin xác nhận từ User
+* Báo cáo cho User các nội dung đã hoàn thành.
+* Cung cấp đoạn changelog ngắn để User chuẩn bị cập nhật trên Chrome Web Store Developer Dashboard.
+* **Hỏi xin phép xác nhận để tạo GitHub Release.**
 
-### Buoc 7: Tao GitHub Release (Sau khi User dong y)
-* Chay lenh CLI de tao release va dinh kem file zip:
+### Bước 7: Tạo GitHub Release (Sau khi User đồng ý)
+* Chạy lệnh CLI để tạo release và đính kèm file zip:
   ```bash
   gh release create vX.Y.Z chord-side-panel-vX.Y.Z.zip --title "vX.Y.Z" --notes "Release vX.Y.Z"
   ```
 
 ---
 
-## 4. Cac lenh CLI thuong dung
+## 4. Các lệnh CLI thường dùng
 
-| Tac vu | Lenh |
+| Tác vụ | Lệnh |
 | :--- | :--- |
-| Dong goi tien ich ra file ZIP | `npm run build` |
-| Tao lai bo Icon tu vector generator | `npm run generate-icons` |
-| Kiem tra cu phap JavaScript | `node -c panel.js` |
-| Kiem tra trang thai Git | `git status` |
-| Xem danh sach file trong ZIP | `unzip -l chord-side-panel-v*.zip` |
-| Kiem tra trang thai dang nhap GitHub CLI | `gh auth status` |
-| Tao GitHub Release (chi khi user duyet) | `gh release create vX.Y.Z chord-side-panel-vX.Y.Z.zip --title "vX.Y.Z" --notes "..."` |
+| Đóng gói tiện ích ra file ZIP | `npm run build` |
+| Tạo lại bộ Icon từ vector generator | `npm run generate-icons` |
+| Kiểm tra cú pháp JavaScript | `node -c panel.js` |
+| Kiểm tra trạng thái Git | `git status` |
+| Xem danh sách file trong ZIP | `unzip -l chord-side-panel-v*.zip` |
+| Kiểm tra trạng thái đăng nhập GitHub CLI | `gh auth status` |
+| Tạo GitHub Release (chỉ khi user duyệt) | `gh release create vX.Y.Z chord-side-panel-vX.Y.Z.zip --title "vX.Y.Z" --notes "..."` |
