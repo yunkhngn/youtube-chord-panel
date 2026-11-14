@@ -15,10 +15,13 @@
           <span class="brand-name">Hợp Âm Chuẩn</span>
         </div>
         <div class="header-actions">
-          <button type="button" id="history-toggle" class="icon-btn" title="Lịch sử bài đã xem">
+          <button type="button" id="about-toggle" class="icon-btn" title="Thong tin & Tac gia">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          </button>
+          <button type="button" id="history-toggle" class="icon-btn" title="Lich su bai da xem">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           </button>
-          <button type="button" id="open-tab" class="icon-btn" title="Mở trang hiện tại trong tab mới">
+          <button type="button" id="open-tab" class="icon-btn" title="Mo trang hien tai trong tab moi">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           </button>
         </div>
@@ -76,15 +79,32 @@
       <!-- Trạng thái thông báo -->
       <p id="status" class="status" role="status" aria-live="polite"></p>
 
-      <!-- Panel Lịch sử đã xem gần đây (ẩn mặc định) -->
+      <!-- Panel Lich su da xem gan day (an mac dinh) -->
       <div id="history-panel" class="history-panel hidden">
         <div class="history-header">
-          <span>Bài đã xem gần đây</span>
-          <button type="button" id="history-clear" class="text-btn">Xóa hết</button>
+          <span>Bai da xem gan day</span>
+          <button type="button" id="history-clear" class="text-btn">Xoa het</button>
         </div>
         <ul id="history-list" class="history-list">
-          <li class="history-empty">Chưa có bài nào trong lịch sử</li>
+          <li class="history-empty">Chua co bai nao trong lich su</li>
         </ul>
+      </div>
+
+      <!-- Panel Thong tin & Credit (an mac dinh) -->
+      <div id="about-panel" class="about-panel hidden">
+        <div class="about-header">
+          <strong>Chord Side Panel v0.2.0</strong>
+          <button type="button" id="about-close" class="text-btn">Dong</button>
+        </div>
+        <p class="about-desc">Xem Hop Am Chuan ben canh video YouTube trong Chrome Side Panel.</p>
+        <div class="about-author">
+          Phat trien boi: <strong>@yunkhngn</strong>
+        </div>
+        <div class="about-links">
+          <a href="https://github.com/yunkhngn" target="_blank" rel="noopener" class="about-link" id="link-github">GitHub: @yunkhngn</a>
+          <a href="https://www.facebook.com/yun.khngn/" target="_blank" rel="noopener" class="about-link" id="link-fb">Facebook: yun.khngn</a>
+          <a href="https://buymeacoffee.com/yunkhngn" target="_blank" rel="noopener" class="about-link coffee-link" id="link-coffee">Buy Me a Coffee: yunkhngn</a>
+        </div>
       </div>
     </header>
 

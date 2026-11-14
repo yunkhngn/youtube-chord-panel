@@ -5,11 +5,6 @@ const SOURCES = {
     home: "https://hopamchuan.com/",
     search: (q) => `https://hopamchuan.com/search?q=${encodeURIComponent(q)}`,
   },
-  ug: {
-    home: "https://www.ultimate-guitar.com/",
-    search: (q) =>
-      `https://www.ultimate-guitar.com/search.php?search_type=title&value=${encodeURIComponent(q)}`,
-  },
 };
 
 const YOUTUBE_WATCH_URLS = [
@@ -24,7 +19,6 @@ const frame = document.getElementById("frame");
 const form = document.getElementById("search-form");
 const input = document.getElementById("query");
 const statusEl = document.getElementById("status");
-const sourceButtons = [...document.querySelectorAll("#sources button")];
 
 // Control elements
 const btnScrollToggle = document.getElementById("btn-scroll-toggle");
@@ -41,6 +35,10 @@ const historyPanel = document.getElementById("history-panel");
 const historyList = document.getElementById("history-list");
 const historyClear = document.getElementById("history-clear");
 const btnOpenTab = document.getElementById("open-tab");
+
+const aboutToggle = document.getElementById("about-toggle");
+const aboutPanel = document.getElementById("about-panel");
+const aboutClose = document.getElementById("about-close");
 
 // State
 let state = {
@@ -78,9 +76,7 @@ function persistState() {
 }
 
 function renderSource() {
-  for (const button of sourceButtons) {
-    button.setAttribute("aria-selected", String(button.dataset.source === state.source));
-  }
+  // Chỉ hỗ trợ Hợp Âm Chuẩn
 }
 
 function renderControls() {
@@ -360,22 +356,34 @@ historyClear.addEventListener("click", () => {
   setStatus("Đã xóa lịch sử.");
 });
 
-// Đóng popup lịch sử khi bấm ra ngoài
+// Dong popup khi bam ra ngoai
 document.addEventListener("click", (e) => {
   if (!historyPanel.contains(e.target) && !historyToggle.contains(e.target)) {
     historyPanel.classList.add("hidden");
   }
+  if (!aboutPanel.contains(e.target) && !aboutToggle.contains(e.target)) {
+    aboutPanel.classList.add("hidden");
+  }
 });
 
-for (const button of sourceButtons) {
-  button.addEventListener("click", () => {
-    state.source = button.dataset.source;
-    state.query = input.value.trim();
-    persistState();
-    renderSource();
-    navigate();
+aboutToggle.addEventListener("click", () => {
+  aboutPanel.classList.toggle("hidden");
+  historyPanel.classList.add("hidden");
+});
+
+aboutClose.addEventListener("click", () => {
+  aboutPanel.classList.add("hidden");
+});
+
+// Xu ly mo link trong about panel bang tab moi
+document.querySelectorAll(".about-link").forEach((link) => {
+  link.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (link.href) {
+      chrome.tabs.create({ url: link.href });
+    }
   });
-}
+});
 
 // Lắng nghe YouTube tab update để tự động bắt bài khi chuyển video trong playlist
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
