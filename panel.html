@@ -8,22 +8,87 @@
   </head>
   <body>
     <header class="toolbar">
-      <div class="sources" role="tablist" aria-label="Nguồn hợp âm" id="sources">
-        <button type="button" role="tab" data-source="hac">Hợp Âm Chuẩn</button>
-        <button type="button" role="tab" data-source="ug">Ultimate Guitar</button>
+      <!-- 1. Chọn nguồn hợp âm -->
+      <div class="row sources-row">
+        <div class="sources" role="tablist" aria-label="Nguồn hợp âm" id="sources">
+          <button type="button" role="tab" data-source="hac" aria-selected="true">Hợp Âm Chuẩn</button>
+          <button type="button" role="tab" data-source="ug" aria-selected="false">Ultimate Guitar</button>
+        </div>
+        <div class="header-actions">
+          <button type="button" id="history-toggle" class="icon-btn" title="Lịch sử bài đã xem">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </button>
+          <button type="button" id="open-tab" class="icon-btn" title="Mở trang hiện tại trong tab mới">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </button>
+        </div>
       </div>
 
-      <form class="search" id="search-form" role="search">
-        <label class="sr-only" for="query">Tên bài hát hoặc ca sĩ</label>
-        <input id="query" type="search" placeholder="Tên bài / ca sĩ…" autocomplete="off" spellcheck="false" />
-        <button type="submit" class="primary">Tìm</button>
-        <button type="button" id="from-youtube" title="Lấy tên bài từ tab YouTube đang mở">▶ YouTube</button>
-        <button type="button" id="open-tab" title="Mở trang hiện tại trong tab mới">↗</button>
+      <!-- 2. Thanh tìm kiếm -->
+      <form class="search-form" id="search-form" role="search">
+        <div class="input-wrapper">
+          <input
+            id="query"
+            type="search"
+            placeholder="Tên bài hát / ca sĩ…"
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </div>
+        <button type="submit" class="btn primary" id="btn-search" title="Tìm hợp âm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span>Tìm</span>
+        </button>
+        <button type="button" id="from-youtube" class="btn yt-btn" title="Lấy tên bài từ tab YouTube đang xem">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg>
+          <span>YouTube</span>
+        </button>
       </form>
 
+      <!-- 3. Thanh điều khiển hỗ trợ đánh đàn (Auto-scroll & Split 50|50) -->
+      <div class="row controls-row">
+        <div class="control-group scroll-group">
+          <button type="button" id="btn-scroll-toggle" class="btn control-btn" title="Bật/Tắt tự động cuộn trang">
+            <svg id="scroll-play-icon" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <svg id="scroll-pause-icon" class="hidden" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            <span id="scroll-btn-label">Cuộn</span>
+          </button>
+          <div class="speed-selector" id="speed-selector" title="Tốc độ cuộn">
+            <button type="button" class="speed-btn" data-speed="0.5">0.5x</button>
+            <button type="button" class="speed-btn active" data-speed="1">1x</button>
+            <button type="button" class="speed-btn" data-speed="1.5">1.5x</button>
+            <button type="button" class="speed-btn" data-speed="2">2x</button>
+          </div>
+        </div>
+
+        <div class="control-group layout-group">
+          <button type="button" id="btn-split-toggle" class="btn control-btn" aria-pressed="false" title="Chia đôi 2 cột 50|50 (Không tràn mép, dễ theo dõi)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/></svg>
+            <span>50 | 50</span>
+          </button>
+          <button type="button" id="btn-auto-sync" class="btn control-btn" aria-pressed="false" title="Tự động bắt bài mới khi YouTube chuyển bài">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <span>Auto</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Trạng thái thông báo -->
       <p id="status" class="status" role="status" aria-live="polite"></p>
+
+      <!-- Panel Lịch sử đã xem gần đây (ẩn mặc định) -->
+      <div id="history-panel" class="history-panel hidden">
+        <div class="history-header">
+          <span>Bài đã xem gần đây</span>
+          <button type="button" id="history-clear" class="text-btn">Xóa hết</button>
+        </div>
+        <ul id="history-list" class="history-list">
+          <li class="history-empty">Chưa có bài nào trong lịch sử</li>
+        </ul>
+      </div>
     </header>
 
+    <!-- Khung nhúng trang hợp âm -->
     <iframe id="frame" title="Trang hợp âm" referrerpolicy="no-referrer-when-downgrade"></iframe>
 
     <script src="panel.js"></script>

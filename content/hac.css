@@ -1,0 +1,116 @@
+/* ==========================================================================
+   Chord Side Panel - Styles for HopAmChuan iframe embedding
+   ========================================================================== */
+
+/* Chỉ can thiệp khi nằm trong iframe của Side Panel */
+body.chord-panel-embedded {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background-color: #ffffff !important;
+}
+
+/* Ẩn các phần tử thừa, quảng cáo, header, footer để tối đa hóa không gian đọc hợp âm */
+body.chord-panel-embedded header,
+body.chord-panel-embedded nav,
+body.chord-panel-embedded .navbar,
+body.chord-panel-embedded #navbar,
+body.chord-panel-embedded .top-header,
+body.chord-panel-embedded footer,
+body.chord-panel-embedded .footer,
+body.chord-panel-embedded .site-footer,
+body.chord-panel-embedded .adsbygoogle,
+body.chord-panel-embedded [id*="google_ads"],
+body.chord-panel-embedded [id*="qc-"],
+body.chord-panel-embedded [class*="banner"],
+body.chord-panel-embedded [class*="ads-"],
+body.chord-panel-embedded .alert,
+body.chord-panel-embedded .alert-warning,
+body.chord-panel-embedded .alert-info,
+body.chord-panel-embedded #qc-top,
+body.chord-panel-embedded #qc-bottom,
+body.chord-panel-embedded .btn-feedback,
+body.chord-panel-embedded .report-error,
+body.chord-panel-embedded .rating-container,
+body.chord-panel-embedded .social-share,
+body.chord-panel-embedded .comment-section,
+body.chord-panel-embedded #comment-section,
+body.chord-panel-embedded .app-banner {
+  display: none !important;
+}
+
+/* Triệt tiêu lỗi âm lề (negative margins) của Bootstrap làm lẹm chữ 2 bên */
+body.chord-panel-embedded .container,
+body.chord-panel-embedded .container-fluid,
+body.chord-panel-embedded .row,
+body.chord-panel-embedded #song-detail,
+body.chord-panel-embedded .song-detail,
+body.chord-panel-embedded .main-content,
+body.chord-panel-embedded #main-content,
+body.chord-panel-embedded .col-xs-12,
+body.chord-panel-embedded .col-md-12 {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+}
+
+/* Cho phép thanh công cụ Hợp Âm Chuẩn tự động rớt dòng nếu màn hình hẹp */
+body.chord-panel-embedded .song-options,
+body.chord-panel-embedded .toolbar,
+body.chord-panel-embedded .options-bar,
+body.chord-panel-embedded .btn-toolbar,
+body.chord-panel-embedded .btn-group {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 4px !important;
+  max-width: 100% !important;
+  margin-bottom: 8px !important;
+  box-sizing: border-box !important;
+}
+
+/* Khối nội dung hợp âm & lời bài hát */
+body.chord-panel-embedded .song-content,
+body.chord-panel-embedded #song-content,
+body.chord-panel-embedded .t-content,
+body.chord-panel-embedded .chord-content,
+body.chord-panel-embedded pre {
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  white-space: pre-wrap !important;
+  line-height: 1.7 !important;
+  font-family: inherit !important;
+}
+
+/* ==========================================================================
+   Chế độ Chia Cột 50 | 50 (Split 2 Columns) - Không bao giờ bị tràn mép
+   ========================================================================== */
+body.chord-panel-embedded.split-50-enabled .song-content,
+body.chord-panel-embedded.split-50-enabled #song-content,
+body.chord-panel-embedded.split-50-enabled .t-content,
+body.chord-panel-embedded.split-50-enabled pre {
+  column-count: 2 !important;
+  column-gap: 24px !important;
+  column-rule: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+/* Tránh ngắt dòng dở dang giữa câu hát khi chia cột */
+body.chord-panel-embedded.split-50-enabled .song-content > p,
+body.chord-panel-embedded.split-50-enabled .song-content > div,
+body.chord-panel-embedded.split-50-enabled .verse {
+  break-inside: avoid-column !important;
+  page-break-inside: avoid !important;
+}
