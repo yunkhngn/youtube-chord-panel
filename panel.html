@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chord Side Panel</title>
+    <link rel="stylesheet" href="panel.css" />
+  </head>
+  <body>
+    <header class="toolbar">
+      <div class="sources" role="tablist" aria-label="Nguồn hợp âm" id="sources">
+        <button type="button" role="tab" data-source="hac">Hợp Âm Chuẩn</button>
+        <button type="button" role="tab" data-source="ug">Ultimate Guitar</button>
+      </div>
+
+      <form class="search" id="search-form" role="search">
+        <label class="sr-only" for="query">Tên bài hát hoặc ca sĩ</label>
+        <input id="query" type="search" placeholder="Tên bài / ca sĩ…" autocomplete="off" spellcheck="false" />
+        <button type="submit" class="primary">Tìm</button>
+        <button type="button" id="from-youtube" title="Lấy tên bài từ tab YouTube đang mở">▶ YouTube</button>
+        <button type="button" id="open-tab" title="Mở trang hiện tại trong tab mới">↗</button>
+      </form>
+
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+    </header>
+
+    <iframe id="frame" title="Trang hợp âm" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+    <script src="panel.js"></script>
+  </body>
+</html>
