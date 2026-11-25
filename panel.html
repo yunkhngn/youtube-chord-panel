@@ -8,26 +8,26 @@
   </head>
   <body>
     <header class="toolbar">
-      <!-- 1. Tiêu đề nguồn & các nút thao tác nhanh -->
+      <!-- 1. Brand header & quick actions -->
       <div class="row top-row">
         <div class="brand-info">
           <span class="brand-badge">HAC</span>
           <span class="brand-name">Hợp Âm Chuẩn</span>
         </div>
         <div class="header-actions">
-          <button type="button" id="about-toggle" class="icon-btn" title="Thông tin & Tác giả">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <button type="button" id="about-toggle" class="icon-btn" title="Thông tin & Tác giả" aria-expanded="false" aria-controls="about-panel">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 5a1.25 1.25 0 1 1 0 2.5A1.25 1.25 0 0 1 12 7zm1 4.5a1 1 0 1 0-2 0V16a1 1 0 1 0 2 0v-4.5z"/></svg>
           </button>
-          <button type="button" id="history-toggle" class="icon-btn" title="Lịch sử bài đã xem">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <button type="button" id="history-toggle" class="icon-btn" title="Lịch sử bài đã xem" aria-expanded="false" aria-controls="history-panel">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm1 5a1 1 0 1 0-2 0v5c0 .315.148.611.4.8l3.2 2.4a1 1 0 1 0 1.2-1.6L13 11.5V7z"/></svg>
           </button>
           <button type="button" id="open-tab" class="icon-btn" title="Mở trang hiện tại trong tab mới">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 3a1 1 0 1 0 0 2h3.586l-7.293 7.293a1 1 0 1 0 1.414 1.414L19 6.414V10a1 1 0 1 0 2 0V4a1 1 0 0 0-1-1h-6z"/><path d="M5 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5a1 1 0 1 0-2 0v5H5V6h5a1 1 0 1 0 0-2H5z"/></svg>
           </button>
         </div>
       </div>
 
-      <!-- 2. Thanh tìm kiếm -->
+      <!-- 2. Search bar -->
       <form class="search-form" id="search-form" role="search">
         <div class="input-wrapper">
           <input
@@ -39,21 +39,21 @@
           />
         </div>
         <button type="submit" class="btn primary" id="btn-search" title="Tìm hợp âm">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 3a7.5 7.5 0 1 0 4.622 13.408l4.235 4.235a1.25 1.25 0 0 0 1.768-1.768l-4.235-4.235A7.5 7.5 0 0 0 10.5 3zM5.5 10.5a5 5 0 1 1 10 0 5 5 0 0 1-10 0z"/></svg>
           <span>Tìm</span>
         </button>
         <button type="button" id="from-youtube" class="btn yt-btn" title="Lấy tên bài từ tab YouTube đang xem">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg>
           <span>YouTube</span>
         </button>
       </form>
 
-      <!-- 3. Thanh điều khiển hỗ trợ đánh đàn (Auto-scroll & Split 50|50) -->
+      <!-- 3. Musician playback & layout controls -->
       <div class="row controls-row">
         <div class="control-group scroll-group">
           <button type="button" id="btn-scroll-toggle" class="btn control-btn" title="Bật/Tắt tự động cuộn trang">
-            <svg id="scroll-play-icon" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            <svg id="scroll-pause-icon" class="hidden" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            <svg id="scroll-play-icon" width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+            <svg id="scroll-pause-icon" class="hidden" width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4" width="4.5" height="16" rx="1"/><rect x="13.5" y="4" width="4.5" height="16" rx="1"/></svg>
             <span id="scroll-btn-label">Cuộn</span>
           </button>
           <div class="speed-selector" id="speed-selector" title="Tốc độ cuộn">
@@ -66,20 +66,20 @@
 
         <div class="control-group layout-group">
           <button type="button" id="btn-split-toggle" class="btn control-btn" aria-pressed="false" title="Chia đôi 2 cột 50|50 (Không tràn mép, dễ theo dõi)">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="3" y="4" width="8" height="16" rx="2"/><rect x="13" y="4" width="8" height="16" rx="2"/></svg>
             <span>50 | 50</span>
           </button>
           <button type="button" id="btn-auto-sync" class="btn control-btn" aria-pressed="false" title="Tự động bắt bài mới khi YouTube chuyển bài">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
             <span>Auto</span>
           </button>
         </div>
       </div>
 
-      <!-- Trạng thái thông báo -->
+      <!-- Status bar -->
       <p id="status" class="status" role="status" aria-live="polite"></p>
 
-      <!-- Panel Lịch sử đã xem gần đây (ẩn mặc định) -->
+      <!-- Recent History Popover -->
       <div id="history-panel" class="history-panel hidden">
         <div class="history-header">
           <span>Bài đã xem gần đây</span>
@@ -90,7 +90,7 @@
         </ul>
       </div>
 
-      <!-- Panel Thông tin & Credit (ẩn mặc định) -->
+      <!-- About & Credits Popover -->
       <div id="about-panel" class="about-panel hidden">
         <div class="about-header">
           <strong>Chord Side Panel v0.2.0</strong>
@@ -101,14 +101,23 @@
           Phát triển bởi: <strong>@yunkhngn</strong>
         </div>
         <div class="about-links">
-          <a href="https://github.com/yunkhngn" target="_blank" rel="noopener" class="about-link" id="link-github">GitHub: @yunkhngn</a>
-          <a href="https://www.facebook.com/yun.khngn/" target="_blank" rel="noopener" class="about-link" id="link-fb">Facebook: yun.khngn</a>
-          <a href="https://buymeacoffee.com/yunkhngn" target="_blank" rel="noopener" class="about-link coffee-link" id="link-coffee">Buy Me a Coffee: yunkhngn</a>
+          <a href="https://github.com/yunkhngn" target="_blank" rel="noopener" class="about-link" id="link-github">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+            <span>GitHub: @yunkhngn</span>
+          </a>
+          <a href="https://www.facebook.com/yun.khngn/" target="_blank" rel="noopener" class="about-link" id="link-fb">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5h1.6V4.9c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.4-4 4.1V11H7.5v3h2.8v8h3.2z"/></svg>
+            <span>Facebook: yun.khngn</span>
+          </a>
+          <a href="https://buymeacoffee.com/yunkhngn" target="_blank" rel="noopener" class="about-link coffee-link" id="link-coffee">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v1h1a3 3 0 0 1 0 6h-1.17A5.002 5.002 0 0 1 13 18H9a5 5 0 0 1-5-5V7zm14 3v2h1a1 1 0 1 0 0-2h-1zM4 20a1 1 0 1 0 0 2h14a1 1 0 1 0 0-2H4z"/></svg>
+            <span>Buy Me a Coffee: yunkhngn</span>
+          </a>
         </div>
       </div>
     </header>
 
-    <!-- Khung nhúng trang hợp âm -->
+    <!-- Chord sheet iframe -->
     <iframe id="frame" title="Trang hợp âm" referrerpolicy="no-referrer-when-downgrade"></iframe>
 
     <script src="panel.js"></script>

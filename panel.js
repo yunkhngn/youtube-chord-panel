@@ -276,7 +276,7 @@ function renderHistory() {
     li.addEventListener("click", () => {
       state.source = SOURCES[item.source] ? item.source : "hac";
       renderSource();
-      historyPanel.classList.add("hidden");
+      setPopoverState("none");
       openHistoryItem(item);
     });
     historyList.appendChild(li);
@@ -583,9 +583,10 @@ frame.addEventListener("load", () => {
 });
 
 // Event Listeners
-form.addEventListener("submit", (event) => {
+form.addEventListener("submit", async (event) => {
   event.preventDefault();
-  activeYoutubeVideoId = "";
+  const activeYtTab = await getActiveYouTubeTab();
+  activeYoutubeVideoId = getYouTubeVideoId(activeYtTab?.url);
   submitSearch(input.value);
 });
 
@@ -604,9 +605,20 @@ btnOpenTab.addEventListener("click", () => {
   if (currentUrl) chrome.tabs.create({ url: currentUrl });
 });
 
+function setPopoverState(openPanel) {
+  const showHistory = openPanel === "history";
+  const showAbout = openPanel === "about";
+  historyPanel.classList.toggle("hidden", !showHistory);
+  aboutPanel.classList.toggle("hidden", !showAbout);
+  historyToggle.classList.toggle("active", showHistory);
+  aboutToggle.classList.toggle("active", showAbout);
+  historyToggle.setAttribute("aria-expanded", String(showHistory));
+  aboutToggle.setAttribute("aria-expanded", String(showAbout));
+}
+
 historyToggle.addEventListener("click", () => {
-  historyPanel.classList.toggle("hidden");
-  aboutPanel.classList.add("hidden");
+  const isOpen = !historyPanel.classList.contains("hidden");
+  setPopoverState(isOpen ? "none" : "history");
 });
 
 historyClear.addEventListener("click", () => {
@@ -621,19 +633,23 @@ historyClear.addEventListener("click", () => {
 document.addEventListener("click", (e) => {
   if (!historyPanel.contains(e.target) && !historyToggle.contains(e.target)) {
     historyPanel.classList.add("hidden");
+    historyToggle.classList.remove("active");
+    historyToggle.setAttribute("aria-expanded", "false");
   }
   if (!aboutPanel.contains(e.target) && !aboutToggle.contains(e.target)) {
     aboutPanel.classList.add("hidden");
+    aboutToggle.classList.remove("active");
+    aboutToggle.setAttribute("aria-expanded", "false");
   }
 });
 
 aboutToggle.addEventListener("click", () => {
-  aboutPanel.classList.toggle("hidden");
-  historyPanel.classList.add("hidden");
+  const isOpen = !aboutPanel.classList.contains("hidden");
+  setPopoverState(isOpen ? "none" : "about");
 });
 
 aboutClose.addEventListener("click", () => {
-  aboutPanel.classList.add("hidden");
+  setPopoverState("none");
 });
 
 // Xu ly mo link trong about panel bang tab moi
@@ -694,9 +710,12 @@ async function init() {
   // Nếu tab hiện tại đang mở một video YouTube khác với bài đã đồng bộ trước đó -> mở thẳng bài hát ngay
   const activeYtTab = await getActiveYouTubeTab();
   const activeYtQuery = activeYtTab?.title ? cleanVideoTitle(activeYtTab.title) : "";
-  if (activeYtQuery && (activeYtQuery !== lastAutoSyncQuery || (!state.query && !state.url))) {
-    await openFromYouTubeTab(activeYtTab, "Đã nhận diện");
-    return;
+  if (activeYtQuery) {
+    activeYoutubeVideoId = getYouTubeVideoId(activeYtTab.url);
+    if (activeYtQuery !== lastAutoSyncQuery || (!state.query && !state.url)) {
+      await openFromYouTubeTab(activeYtTab, "Đã nhận diện");
+      return;
+    }
   }
 
   // Fallback khi chưa có từ khóa/bài hát cũ -> tìm từ bất kỳ tab YouTube nào đang mở
