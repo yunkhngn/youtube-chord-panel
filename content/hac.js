@@ -3,6 +3,90 @@
   // Chỉ thực thi nếu đang nằm trong iframe (side panel)
   if (window.self === window.top) return;
 
+  function getCleanUrl() {
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("s");
+      return url.toString();
+    } catch {
+      return window.location.href;
+    }
+  }
+
+  function extractSongTitle() {
+    const titleEl = document.querySelector("#song-title > span") || document.querySelector("#song-title");
+    const songTitle = titleEl ? titleEl.textContent.replace(/\s+/g, " ").trim() : "";
+    const singerEls = [...document.querySelectorAll("#song-author .perform-singer-list .author-item")];
+    const singers = [...new Set(singerEls.map((el) => el.textContent.replace(/\s+/g, " ").trim()).filter(Boolean))];
+
+    if (songTitle && singers.length > 0) {
+      return `${songTitle} - ${singers.join(", ")}`;
+    }
+    if (songTitle) {
+      return songTitle;
+    }
+
+    return document.title
+      .replace(/^Hợp âm\s+/i, "")
+      .replace(/\s*-\s*Hợp Âm Chuẩn$/i, "")
+      .trim();
+  }
+
+  function notifyParentPageLoaded() {
+    if (window.parent !== window.top) return;
+    const isSong = /^\/song\/\d+(\/|$)/.test(window.location.pathname);
+    window.parent.postMessage(
+      {
+        type: "CHORD_PAGE_LOADED",
+        url: getCleanUrl(),
+        title: isSong ? extractSongTitle() : "",
+        isSong,
+      },
+      "*"
+    );
+  }
+
+  function disableNativeColumnSplitOnLoad() {
+    const toggle = document.getElementById("tool-box-column-toggle");
+    if (!toggle) return;
+
+    let done = false;
+    let observer = null;
+    let stopTimer = null;
+
+    const cleanup = () => {
+      if (observer) {
+        observer.disconnect();
+        observer = null;
+      }
+      if (stopTimer) {
+        clearTimeout(stopTimer);
+        stopTimer = null;
+      }
+    };
+
+    const uncheckIfOn = () => {
+      if (done) return true;
+      if (toggle.classList.contains("on")) {
+        done = true;
+        cleanup();
+        toggle.click();
+        return true;
+      }
+      return false;
+    };
+
+    if (uncheckIfOn()) return;
+
+    observer = new MutationObserver(() => {
+      uncheckIfOn();
+    });
+    observer.observe(toggle, { attributes: true, attributeFilter: ["class"] });
+
+    requestAnimationFrame(() => uncheckIfOn());
+    stopTimer = setTimeout(cleanup, 3000);
+  }
+
   function init() {
     if (!document.body) return;
     document.body.classList.add("chord-panel-embedded");
@@ -18,6 +102,9 @@
     if (topOffset && window.scrollY < 20) {
       topOffset.scrollIntoView({ behavior: "smooth", block: "start" });
     }
+
+    disableNativeColumnSplitOnLoad();
+    notifyParentPageLoaded();
   }
 
   if (document.readyState === "loading") {
@@ -25,6 +112,12 @@
   } else {
     init();
   }
+
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) {
+      notifyParentPageLoaded();
+    }
+  });
 
   // Quản lý trạng thái Chia cột 50 | 50
   function setSplit50(enable) {
@@ -36,18 +129,18 @@
     }
   }
 
-  // Quản lý Cuộn tự động (Auto-scroll mượt mà)
+  // Smooth auto-scroll controller
+  const BASE_SCROLL_PX_PER_SEC = 12;
   let scrollActive = false;
-  let scrollSpeed = 1; // 1 = 30px/sec
+  let scrollSpeed = 1; // 1x = 12px/sec
   let lastTimestamp = 0;
   let scrollAccumulator = 0;
 
   function scrollLoop(timestamp) {
     if (!scrollActive) return;
     if (lastTimestamp) {
-      const dt = (timestamp - lastTimestamp) / 1000;
-      // 30px/giây ở tốc độ 1x
-      scrollAccumulator += dt * (scrollSpeed * 32);
+      const dt = Math.min((timestamp - lastTimestamp) / 1000, 0.1);
+      scrollAccumulator += dt * (scrollSpeed * BASE_SCROLL_PX_PER_SEC);
       if (scrollAccumulator >= 1) {
         const step = Math.floor(scrollAccumulator);
         window.scrollBy({ top: step, behavior: "auto" });

@@ -336,6 +336,18 @@ input[type="search"]:focus {
   font-weight: 500;
 }
 
+.history-item-src {
+  flex-shrink: 0;
+  margin-left: 8px;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.history-item-src.is-song {
+  color: var(--accent);
+  font-weight: 600;
+}
+
 .history-empty {
   padding: 12px;
   text-align: center;

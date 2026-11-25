@@ -44,6 +44,7 @@ const aboutClose = document.getElementById("about-close");
 let state = {
   source: "hac",
   query: "",
+  url: "",
   isScrolling: false,
   scrollSpeed: 1,
   isSplit50: true,
@@ -53,6 +54,27 @@ let state = {
 
 let currentUrl = "";
 let statusTimer = null;
+let pendingSearchQuery = "";
+let lastAutoSyncQuery = "";
+let activeYoutubeVideoId = "";
+let videoSongMap = {};
+let navigationSeq = 0;
+
+function isValidHopAmChuanOrigin(origin) {
+  try {
+    const parsed = new URL(origin);
+    return (
+      parsed.protocol === "https:" &&
+      (parsed.hostname === "hopamchuan.com" || parsed.hostname.endsWith(".hopamchuan.com"))
+    );
+  } catch {
+    return false;
+  }
+}
+
+function isValidHopAmChuanUrl(url) {
+  return Boolean(url) && isValidHopAmChuanOrigin(url);
+}
 
 function setStatus(message, duration = 3000) {
   if (statusTimer) clearTimeout(statusTimer);
@@ -64,10 +86,26 @@ function setStatus(message, duration = 3000) {
   }
 }
 
+function saveVideoSongMapping(videoId, url, title) {
+  if (!videoId || !isValidHopAmChuanUrl(url)) return;
+  delete videoSongMap[videoId];
+  videoSongMap[videoId] = { url, title: title || "" };
+
+  const keys = Object.keys(videoSongMap);
+  if (keys.length > 100) {
+    for (const oldKey of keys.slice(0, keys.length - 100)) {
+      delete videoSongMap[oldKey];
+    }
+  }
+}
+
 function persistState() {
   chrome.storage.local.set({
     source: state.source,
     query: state.query,
+    url: state.url,
+    lastYtQuery: lastAutoSyncQuery,
+    videoSongMap,
     scrollSpeed: state.scrollSpeed,
     isSplit50: state.isSplit50,
     autoSync: state.autoSync,
@@ -107,6 +145,116 @@ function renderControls() {
   btnAutoSync.classList.toggle("active", state.autoSync);
 }
 
+function buildSearchCandidates(rawQuery) {
+  const query = (rawQuery || "").trim();
+  if (!query) return [];
+
+  const candidates = [];
+  const dashIdx = query.indexOf(" - ");
+  if (dashIdx !== -1) {
+    const left = query.slice(0, dashIdx).trim();
+    const right = query.slice(dashIdx + 3).trim();
+    if (left && right) {
+      candidates.push(`${right} ${left}`, `${left} ${right}`, right);
+    }
+  }
+  candidates.push(query);
+
+  return [...new Set(candidates.filter(Boolean))];
+}
+
+async function fetchFirstSongResult(searchQuery) {
+  const response = await fetch(SOURCES.hac.search(searchQuery), { credentials: "omit" });
+  if (!response.ok) return null;
+
+  const html = await response.text();
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  const item = doc.querySelector(".song-item");
+  const link =
+    item?.querySelector('a.song-title[href*="/song/"]') ||
+    doc.querySelector('a.song-title[href*="/song/"]');
+  if (!link) return null;
+
+  const rawHref = link.getAttribute("href");
+  if (!rawHref) return null;
+
+  const resolvedUrl = new URL(rawHref, "https://hopamchuan.com");
+  if (!/^\/song\/\d+(\/|$)/.test(resolvedUrl.pathname)) return null;
+  resolvedUrl.searchParams.delete("s");
+  const cleanUrl = resolvedUrl.toString();
+  if (!isValidHopAmChuanUrl(cleanUrl)) return null;
+
+  const songName = link.textContent.replace(/\s+/g, " ").trim();
+  const singers = [...(item?.querySelectorAll(".song-singers .author-item") || [])]
+    .map((el) => el.textContent.replace(/\s+/g, " ").trim())
+    .filter(Boolean);
+  const title = singers.length > 0 ? `${songName} - ${singers.join(", ")}` : songName;
+
+  return { url: cleanUrl, title };
+}
+
+async function resolveFirstSongFromSearch(query) {
+  const candidates = buildSearchCandidates(query);
+  for (const candidate of candidates) {
+    const result = await fetchFirstSongResult(candidate);
+    if (result) return result;
+  }
+  return null;
+}
+
+async function resolveAndOpenSong(query, { videoId = "", fallbackStatus = "" } = {}) {
+  const cleanQuery = (query || "").trim();
+  if (!cleanQuery) return false;
+
+  const seq = ++navigationSeq;
+  activeYoutubeVideoId = videoId || "";
+
+  const cached = videoId ? videoSongMap[videoId] : null;
+  if (cached && isValidHopAmChuanUrl(cached.url)) {
+    openSong(cached.url, cached.title || cleanQuery);
+    return true;
+  }
+
+  setStatus("Đang mở bài hát…", 0);
+  try {
+    const resolved = await resolveFirstSongFromSearch(cleanQuery);
+    if (seq !== navigationSeq) return false;
+    if (resolved) {
+      state.history = state.history.filter(
+        (h) => !(!h.url && h.query === cleanQuery && h.source === state.source)
+      );
+      if (videoId) {
+        saveVideoSongMapping(videoId, resolved.url, resolved.title || cleanQuery);
+      }
+      openSong(resolved.url, resolved.title || cleanQuery);
+      return true;
+    }
+  } catch (err) {
+    console.warn("Could not resolve song:", err);
+  }
+
+  if (seq !== navigationSeq) return false;
+  submitSearch(cleanQuery);
+  if (fallbackStatus) {
+    setStatus(fallbackStatus);
+  }
+  return false;
+}
+
+async function openHistoryItem(item) {
+  activeYoutubeVideoId = "";
+  const hasSongUrl = Boolean(item.url && isValidHopAmChuanUrl(item.url));
+  const label = item.title || item.query || item.url;
+  if (hasSongUrl) {
+    openSong(item.url, label);
+    return;
+  }
+
+  await resolveAndOpenSong(item.query, {
+    fallbackStatus: "Không tìm thấy bài trực tiếp, đang hiển thị kết quả tìm kiếm.",
+  });
+}
+
 function renderHistory() {
   if (!state.history || state.history.length === 0) {
     historyList.innerHTML = '<li class="history-empty">Chưa có bài nào trong lịch sử</li>';
@@ -115,17 +263,21 @@ function renderHistory() {
 
   historyList.innerHTML = "";
   for (const item of state.history) {
+    const hasSongUrl = Boolean(item.url && isValidHopAmChuanUrl(item.url));
+    const label = item.title || item.query || item.url;
+    const badgeText = hasSongUrl ? "Bài hát" : "Mở bài";
+
     const li = document.createElement("li");
     li.className = "history-item";
     li.innerHTML = `
-      <span class="history-item-title">${escapeHtml(item.query)}</span>
-      <span class="history-item-src" style="font-size: 10px; color: var(--muted);">${item.source.toUpperCase()}</span>
+      <span class="history-item-title">${escapeHtml(label)}</span>
+      <span class="history-item-src${hasSongUrl ? " is-song" : ""}">${badgeText}</span>
     `;
     li.addEventListener("click", () => {
-      state.source = item.source;
+      state.source = SOURCES[item.source] ? item.source : "hac";
       renderSource();
-      submitSearch(item.query);
       historyPanel.classList.add("hidden");
+      openHistoryItem(item);
     });
     historyList.appendChild(li);
   }
@@ -140,18 +292,49 @@ function escapeHtml(str) {
     .replace(/'/g, "&#039;");
 }
 
-function addToHistory(query, source) {
-  if (!query) return;
-  state.history = state.history.filter((h) => !(h.query === query && h.source === source));
-  state.history.unshift({ query, source, timestamp: Date.now() });
+function addToHistory(query, source, url = "", title = "") {
+  if (!query && !url) return;
+  state.history = state.history.filter((h) => {
+    if (url && h.url) return h.url !== url;
+    return !(h.query === query && h.source === source && !h.url);
+  });
+  state.history.unshift({
+    query: query || title,
+    title: title || undefined,
+    url: url || undefined,
+    source,
+    timestamp: Date.now(),
+  });
   state.history = state.history.slice(0, 20);
   renderHistory();
   persistState();
 }
 
+function recordOpenedSong(title, url) {
+  if (!isValidHopAmChuanUrl(url)) return;
+  const label = (title || state.query || "").trim();
+
+  // Replace the pending raw search entry if the user opened a song right from it
+  if (pendingSearchQuery) {
+    const pendingIdx = state.history.findIndex(
+      (h) => !h.url && h.query === pendingSearchQuery && h.source === state.source
+    );
+    if (pendingIdx !== -1) {
+      state.history.splice(pendingIdx, 1);
+    }
+    pendingSearchQuery = "";
+  }
+
+  addToHistory(label, state.source, url, label);
+}
+
 function navigate() {
   const source = SOURCES[state.source];
-  currentUrl = state.query ? source.search(state.query) : source.home;
+  if (state.url && isValidHopAmChuanUrl(state.url)) {
+    currentUrl = state.url;
+  } else {
+    currentUrl = state.query ? source.search(state.query) : source.home;
+  }
   frame.src = currentUrl;
 
   // Dừng cuộn trang khi chuyển bài mới
@@ -162,11 +345,29 @@ function navigate() {
 }
 
 function submitSearch(query) {
+  navigationSeq++;
   state.query = query.trim();
+  state.url = "";
+  pendingSearchQuery = state.query;
   input.value = state.query;
   if (state.query) {
     addToHistory(state.query, state.source);
   }
+  persistState();
+  setStatus("");
+  navigate();
+}
+
+function openSong(url, title) {
+  if (!isValidHopAmChuanUrl(url)) return;
+  navigationSeq++;
+  pendingSearchQuery = "";
+  state.url = url;
+  if (title) {
+    state.query = title;
+    input.value = title;
+  }
+  addToHistory(title || state.query, state.source, url, title);
   persistState();
   setStatus("");
   navigate();
@@ -234,6 +435,28 @@ function cleanVideoTitle(raw) {
   return title;
 }
 
+function getYouTubeVideoId(rawUrl) {
+  if (!rawUrl) return "";
+  try {
+    const parsed = new URL(rawUrl);
+    if (parsed.pathname.startsWith("/shorts/")) {
+      return parsed.pathname.split("/")[2] || "";
+    }
+    return parsed.searchParams.get("v") || "";
+  } catch {
+    return "";
+  }
+}
+
+async function getActiveYouTubeTab() {
+  const tabs = await chrome.tabs.query({
+    url: YOUTUBE_WATCH_URLS,
+    active: true,
+    lastFocusedWindow: true,
+  });
+  return tabs[0] || null;
+}
+
 async function getYouTubeTab() {
   const tabs = await chrome.tabs.query({ url: YOUTUBE_WATCH_URLS, lastFocusedWindow: true });
   if (tabs && tabs.length > 0) {
@@ -244,9 +467,20 @@ async function getYouTubeTab() {
   return allTabs[0] || null;
 }
 
-async function getYouTubeQuery() {
-  const tab = await getYouTubeTab();
-  return tab?.title ? cleanVideoTitle(tab.title) : "";
+async function openFromYouTubeTab(tab, statusPrefix = "Đã nhận diện") {
+  const query = tab?.title ? cleanVideoTitle(tab.title) : "";
+  if (!query) return false;
+
+  const videoId = getYouTubeVideoId(tab.url);
+  lastAutoSyncQuery = query;
+  const openedDirectly = await resolveAndOpenSong(query, {
+    videoId,
+    fallbackStatus: `${statusPrefix}: ${query}`,
+  });
+  if (openedDirectly) {
+    setStatus(`${statusPrefix}: ${query}`);
+  }
+  return true;
 }
 
 async function searchFromYouTube() {
@@ -256,13 +490,10 @@ async function searchFromYouTube() {
     setStatus("Không tìm thấy tab YouTube đang phát video.");
     return;
   }
-  const query = cleanVideoTitle(tab.title);
-  if (!query) {
+  const ok = await openFromYouTubeTab(tab, "Đã nhận diện");
+  if (!ok) {
     setStatus("Không trích xuất được tên bài từ tiêu đề YouTube.");
-    return;
   }
-  setStatus(`Đã nhận diện: ${query}`);
-  submitSearch(query);
 }
 
 // Gửi thông điệp tới content script trong iframe
@@ -316,6 +547,33 @@ function toggleAutoSync() {
   );
 }
 
+// Lắng nghe thông tin trang hiện tại từ content script trong iframe
+window.addEventListener("message", (event) => {
+  if (event.source !== frame.contentWindow) return;
+  if (!isValidHopAmChuanOrigin(event.origin)) return;
+
+  const data = event.data;
+  if (!data || typeof data !== "object" || data.type !== "CHORD_PAGE_LOADED") return;
+  if (!isValidHopAmChuanUrl(data.url)) return;
+
+  currentUrl = data.url;
+  if (data.isSong) {
+    state.url = data.url;
+    const songTitle = typeof data.title === "string" ? data.title.trim() : "";
+    if (songTitle) {
+      state.query = songTitle;
+      input.value = songTitle;
+    }
+    if (activeYoutubeVideoId) {
+      saveVideoSongMapping(activeYoutubeVideoId, data.url, songTitle);
+    }
+    recordOpenedSong(songTitle, data.url);
+  } else {
+    state.url = "";
+    persistState();
+  }
+});
+
 // Khi iframe tải xong, truyền cấu hình hiện tại (Split 50, Auto-scroll) vào frame
 frame.addEventListener("load", () => {
   postToFrame({ type: "CHORD_SET_SPLIT_50", enabled: state.isSplit50 });
@@ -327,6 +585,7 @@ frame.addEventListener("load", () => {
 // Event Listeners
 form.addEventListener("submit", (event) => {
   event.preventDefault();
+  activeYoutubeVideoId = "";
   submitSearch(input.value);
 });
 
@@ -347,10 +606,12 @@ btnOpenTab.addEventListener("click", () => {
 
 historyToggle.addEventListener("click", () => {
   historyPanel.classList.toggle("hidden");
+  aboutPanel.classList.add("hidden");
 });
 
 historyClear.addEventListener("click", () => {
   state.history = [];
+  pendingSearchQuery = "";
   persistState();
   renderHistory();
   setStatus("Đã xóa lịch sử.");
@@ -394,9 +655,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 
   const newQuery = cleanVideoTitle(changeInfo.title);
-  if (newQuery && newQuery !== state.query) {
-    setStatus(`Tự động chuyển bài: ${newQuery}`);
-    submitSearch(newQuery);
+  if (newQuery && newQuery !== lastAutoSyncQuery) {
+    openFromYouTubeTab(tab, "Tự động chuyển bài");
   }
 });
 
@@ -404,6 +664,9 @@ async function init() {
   const saved = await chrome.storage.local.get({
     source: "hac",
     query: "",
+    url: "",
+    lastYtQuery: "",
+    videoSongMap: {},
     scrollSpeed: 1,
     isSplit50: true,
     autoSync: false,
@@ -412,6 +675,12 @@ async function init() {
 
   state.source = SOURCES[saved.source] ? saved.source : "hac";
   state.query = saved.query || "";
+  state.url = isValidHopAmChuanUrl(saved.url) ? saved.url : "";
+  lastAutoSyncQuery = saved.lastYtQuery || "";
+  videoSongMap =
+    saved.videoSongMap && typeof saved.videoSongMap === "object" && !Array.isArray(saved.videoSongMap)
+      ? saved.videoSongMap
+      : {};
   state.scrollSpeed = Number(saved.scrollSpeed) || 1;
   state.isSplit50 = saved.isSplit50 !== undefined ? Boolean(saved.isSplit50) : true;
   state.autoSync = Boolean(saved.autoSync);
@@ -422,11 +691,18 @@ async function init() {
   renderControls();
   renderHistory();
 
-  // Panel mở lúc đang xem YouTube và chưa có từ khóa cũ -> tự tìm theo tên video
-  if (!state.query) {
-    const query = await getYouTubeQuery();
-    if (query) {
-      submitSearch(query);
+  // Nếu tab hiện tại đang mở một video YouTube khác với bài đã đồng bộ trước đó -> mở thẳng bài hát ngay
+  const activeYtTab = await getActiveYouTubeTab();
+  const activeYtQuery = activeYtTab?.title ? cleanVideoTitle(activeYtTab.title) : "";
+  if (activeYtQuery && (activeYtQuery !== lastAutoSyncQuery || (!state.query && !state.url))) {
+    await openFromYouTubeTab(activeYtTab, "Đã nhận diện");
+    return;
+  }
+
+  // Fallback khi chưa có từ khóa/bài hát cũ -> tìm từ bất kỳ tab YouTube nào đang mở
+  if (!state.query && !state.url) {
+    const ytTab = await getYouTubeTab();
+    if (ytTab && (await openFromYouTubeTab(ytTab, "Đã nhận diện"))) {
       return;
     }
   }
