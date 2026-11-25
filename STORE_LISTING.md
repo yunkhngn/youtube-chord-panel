@@ -113,7 +113,7 @@ Khi nộp extension lên Chrome Web Store, tại mục Privacy > Justification f
    - Nếu chưa có tài khoản developer, thanh toán phí đăng ký 1 lần là $5 USD qua Google Pay.
 2. **Upload Package:**
    - Nhấn New Item (Mục mới).
-   - Kéo thả file chord-side-panel-v0.2.0.zip đã được đóng gói sẵn.
+   - Kéo thả file chord-side-panel-v0.3.0.zip đã được đóng gói sẵn.
 3. **Điền thông tin Listing:**
    - Copy tiêu đề, mô tả ngắn, mô tả chi tiết từ mục 1 và 2 ở trên.
    - Thêm ít nhất 1 ảnh chụp màn hình (1280x800 hoặc 640x400) chụp màn hình YouTube bên trái và Side panel bên phải.

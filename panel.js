@@ -59,6 +59,7 @@ let lastAutoSyncQuery = "";
 let activeYoutubeVideoId = "";
 let videoSongMap = {};
 let navigationSeq = 0;
+let frameRulesEnsured = false;
 
 function isValidHopAmChuanOrigin(origin) {
   try {
@@ -76,6 +77,16 @@ function isValidHopAmChuanUrl(url) {
   return Boolean(url) && isValidHopAmChuanOrigin(url);
 }
 
+async function ensureFrameRules() {
+  if (frameRulesEnsured) return;
+  try {
+    const res = await chrome.runtime.sendMessage({ type: "ENSURE_FRAME_RULES" });
+    if (res?.ok) frameRulesEnsured = true;
+  } catch {
+    // Ignore if background service worker isn't reachable
+  }
+}
+
 function setStatus(message, duration = 3000) {
   if (statusTimer) clearTimeout(statusTimer);
   statusEl.textContent = message;
@@ -84,6 +95,12 @@ function setStatus(message, duration = 3000) {
       statusEl.textContent = "";
     }, duration);
   }
+}
+
+function getCachedVideoMapping(videoId) {
+  if (!videoId) return null;
+  const scoped = videoSongMap[`hac:${videoId}`] || videoSongMap[videoId];
+  return scoped && isValidHopAmChuanUrl(scoped.url) ? scoped : null;
 }
 
 function saveVideoSongMapping(videoId, url, title) {
@@ -114,11 +131,10 @@ function persistState() {
 }
 
 function renderSource() {
-  // Chỉ hỗ trợ Hợp Âm Chuẩn
+  // HopAmChuan only
 }
 
 function renderControls() {
-  // Auto-scroll button state
   if (state.isScrolling) {
     btnScrollToggle.classList.add("active");
     scrollPlayIcon.classList.add("hidden");
@@ -131,16 +147,13 @@ function renderControls() {
     scrollBtnLabel.textContent = "Cuộn";
   }
 
-  // Speed buttons
   for (const btn of speedButtons) {
     btn.classList.toggle("active", Number(btn.dataset.speed) === state.scrollSpeed);
   }
 
-  // 50 | 50 Split button
   btnSplitToggle.setAttribute("aria-pressed", String(state.isSplit50));
   btnSplitToggle.classList.toggle("active", state.isSplit50);
 
-  // Auto-sync button
   btnAutoSync.setAttribute("aria-pressed", String(state.autoSync));
   btnAutoSync.classList.toggle("active", state.autoSync);
 }
@@ -209,8 +222,8 @@ async function resolveAndOpenSong(query, { videoId = "", fallbackStatus = "" } =
   const seq = ++navigationSeq;
   activeYoutubeVideoId = videoId || "";
 
-  const cached = videoId ? videoSongMap[videoId] : null;
-  if (cached && isValidHopAmChuanUrl(cached.url)) {
+  const cached = getCachedVideoMapping(videoId);
+  if (cached) {
     openSong(cached.url, cached.title || cleanQuery);
     return true;
   }
@@ -274,7 +287,7 @@ function renderHistory() {
       <span class="history-item-src${hasSongUrl ? " is-song" : ""}">${badgeText}</span>
     `;
     li.addEventListener("click", () => {
-      state.source = SOURCES[item.source] ? item.source : "hac";
+      state.source = "hac";
       renderSource();
       setPopoverState("none");
       openHistoryItem(item);
@@ -314,7 +327,6 @@ function recordOpenedSong(title, url) {
   if (!isValidHopAmChuanUrl(url)) return;
   const label = (title || state.query || "").trim();
 
-  // Replace the pending raw search entry if the user opened a song right from it
   if (pendingSearchQuery) {
     const pendingIdx = state.history.findIndex(
       (h) => !h.url && h.query === pendingSearchQuery && h.source === state.source
@@ -337,7 +349,6 @@ function navigate() {
   }
   frame.src = currentUrl;
 
-  // Dừng cuộn trang khi chuyển bài mới
   if (state.isScrolling) {
     state.isScrolling = false;
     renderControls();
@@ -374,21 +385,13 @@ function openSong(url, title) {
 }
 
 /**
- * Xử lý làm sạch tên bài hát từ tiêu đề YouTube:
- * - Giải mã triệt để các thực thể HTML (&quot;, &#39;, &amp;,...)
- * - Bỏ số thông báo YouTube (ví dụ "(3) ")
- * - Bỏ đuôi "- YouTube" / "- YouTube Music"
- * - Bỏ nội dung trong ngoặc đơn, ngoặc vuông (MV, Lyrics, Version,...)
- * - Bỏ ft. / feat. và nghệ sĩ đi kèm để lấy tên bài chuẩn nhất
- * - Bỏ các dấu nháy kép, nháy đơn, nháy cong trang trí
- * - Bỏ từ khóa rác: Official, MV, Audio, 4K, Karaoke, Tone nam/nữ, Cover,...
+ * Clean song title from YouTube tab title.
  */
 function cleanVideoTitle(raw) {
   if (!raw) return "";
 
   let title = raw;
 
-  // 1. Giải mã HTML entities
   title = title
     .replace(/&quot;/gi, '"')
     .replace(/&apos;/gi, "'")
@@ -399,37 +402,18 @@ function cleanVideoTitle(raw) {
     .replace(/&gt;/gi, ">")
     .replace(/&nbsp;/gi, " ");
 
-  // 2. Bỏ số thông báo đầu tab: "(3) "
   title = title.replace(/^\(\d+\)\s*/, "");
-
-  // 3. Bỏ đuôi "- YouTube" / "- YouTube Music"
   title = title.replace(/\s*[-–—|]\s*YouTube( Music)?$/i, "");
-
-  // 4. Bỏ các thông tin trong ngoặc: (Official MV), [Lyrics], (Trước iPhone 18 Pro Max),...
   title = title.replace(/[(\[【].*?[)\]】]/g, " ");
-
-  // 5. Bỏ "ft." hoặc "feat." và phần nghệ sĩ phụ phía sau để tìm tên bài chính xác nhất
   title = title.replace(/\s*\b(ft|feat|featuring)\b\.?.*$/gi, "");
-
-  // 6. Bỏ các từ khóa rác phổ biến của video âm nhạc
   title = title.replace(
     /\b(official|music video|video|mv|m\/v|lyrics?|audio|visualizer|hd|4k|live|performance|karaoke|beat|tone nam|tone nữ|guitar cover|cover)\b/gi,
     " "
   );
-
-  // 7. Bỏ tất cả các loại dấu ngoặc kép / nháy trang trí
   title = title.replace(/["'“”‘’«»`]/g, " ");
-
-  // 8. Chuẩn hóa dấu phân tách ca sĩ - bài hát (giữ lại dấu gạch ngang chuẩn " - ")
   title = title.replace(/\s+[-–—|]\s+/g, " - ");
-
-  // 9. Bỏ dấu chấm / gạch thừa ở đầu hoặc cuối chuỗi
   title = title.replace(/(^[\s.\-–—|]+|[\s.\-–—|]+$)/g, "");
-
-  // 10. Gom khoảng trắng
   title = title.replace(/\s+/g, " ").trim();
-
-  // 11. Tránh lặp dấu gạch " - - "
   title = title.replace(/\s*-\s*-\s*/g, " - ");
 
   return title;
@@ -462,7 +446,6 @@ async function getYouTubeTab() {
   if (tabs && tabs.length > 0) {
     return tabs.find((t) => t.active) ?? tabs[0];
   }
-  // Thử tìm trong mọi cửa sổ nếu lastFocusedWindow không có
   const allTabs = await chrome.tabs.query({ url: YOUTUBE_WATCH_URLS });
   return allTabs[0] || null;
 }
@@ -496,7 +479,6 @@ async function searchFromYouTube() {
   }
 }
 
-// Gửi thông điệp tới content script trong iframe
 function postToFrame(message) {
   try {
     frame.contentWindow?.postMessage(message, "*");
@@ -505,7 +487,6 @@ function postToFrame(message) {
   }
 }
 
-// Bật / tắt cuộn tự động
 function toggleScroll() {
   state.isScrolling = !state.isScrolling;
   renderControls();
@@ -547,7 +528,7 @@ function toggleAutoSync() {
   );
 }
 
-// Lắng nghe thông tin trang hiện tại từ content script trong iframe
+// Listen to HopAmChuan page messages inside iframe
 window.addEventListener("message", (event) => {
   if (event.source !== frame.contentWindow) return;
   if (!isValidHopAmChuanOrigin(event.origin)) return;
@@ -574,7 +555,6 @@ window.addEventListener("message", (event) => {
   }
 });
 
-// Khi iframe tải xong, truyền cấu hình hiện tại (Split 50, Auto-scroll) vào frame
 frame.addEventListener("load", () => {
   postToFrame({ type: "CHORD_SET_SPLIT_50", enabled: state.isSplit50 });
   if (state.isScrolling) {
@@ -585,9 +565,10 @@ frame.addEventListener("load", () => {
 // Event Listeners
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
+  const query = input.value;
   const activeYtTab = await getActiveYouTubeTab();
   activeYoutubeVideoId = getYouTubeVideoId(activeYtTab?.url);
-  submitSearch(input.value);
+  submitSearch(query);
 });
 
 document.getElementById("from-youtube").addEventListener("click", searchFromYouTube);
@@ -629,7 +610,6 @@ historyClear.addEventListener("click", () => {
   setStatus("Đã xóa lịch sử.");
 });
 
-// Dong popup khi bam ra ngoai
 document.addEventListener("click", (e) => {
   if (!historyPanel.contains(e.target) && !historyToggle.contains(e.target)) {
     historyPanel.classList.add("hidden");
@@ -652,7 +632,6 @@ aboutClose.addEventListener("click", () => {
   setPopoverState("none");
 });
 
-// Xu ly mo link trong about panel bang tab moi
 document.querySelectorAll(".about-link").forEach((link) => {
   link.addEventListener("click", (e) => {
     e.preventDefault();
@@ -662,7 +641,6 @@ document.querySelectorAll(".about-link").forEach((link) => {
   });
 });
 
-// Lắng nghe YouTube tab update để tự động bắt bài khi chuyển video trong playlist
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (!state.autoSync) return;
   if (!changeInfo.title) return;
@@ -677,6 +655,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 });
 
 async function init() {
+  await ensureFrameRules();
+
   const saved = await chrome.storage.local.get({
     source: "hac",
     query: "",
@@ -689,7 +669,7 @@ async function init() {
     history: [],
   });
 
-  state.source = SOURCES[saved.source] ? saved.source : "hac";
+  state.source = "hac";
   state.query = saved.query || "";
   state.url = isValidHopAmChuanUrl(saved.url) ? saved.url : "";
   lastAutoSyncQuery = saved.lastYtQuery || "";
@@ -707,7 +687,6 @@ async function init() {
   renderControls();
   renderHistory();
 
-  // Nếu tab hiện tại đang mở một video YouTube khác với bài đã đồng bộ trước đó -> mở thẳng bài hát ngay
   const activeYtTab = await getActiveYouTubeTab();
   const activeYtQuery = activeYtTab?.title ? cleanVideoTitle(activeYtTab.title) : "";
   if (activeYtQuery) {
@@ -718,7 +697,6 @@ async function init() {
     }
   }
 
-  // Fallback khi chưa có từ khóa/bài hát cũ -> tìm từ bất kỳ tab YouTube nào đang mở
   if (!state.query && !state.url) {
     const ytTab = await getYouTubeTab();
     if (ytTab && (await openFromYouTubeTab(ytTab, "Đã nhận diện"))) {

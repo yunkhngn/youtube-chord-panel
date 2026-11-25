@@ -4,6 +4,37 @@ Tài liệu này lưu trữ lịch sử cập nhật của Chord Side Panel. B�
 
 ---
 
+## Phiên bản 0.3.0 (Bản phát hành mới - Khuyên dùng copy lên Store)
+
+### Đoạn ngắn gọn (Dán nhanh vào Chrome Web Store):
+```text
+Phiên bản 0.3.0 - Mở thẳng bài hát & tinh chỉnh giao diện:
+- Tự mở thẳng bài hát: Khi bật Side Panel trên video YouTube, bấm nút YouTube hoặc bấm vào mục Lịch sử, tiện ích tự tìm và nhảy thẳng vào trang hợp âm (hỗ trợ cả truy vấn dạng Ca sĩ - Bài hát).
+- Ghi nhớ bài theo video YouTube: Nếu bạn chọn lại bản hợp âm khác trên trang tìm kiếm, tiện ích tự cập nhật ghi nhớ cho lần mở sau.
+- Tối ưu đọc hợp âm trên Hợp Âm Chuẩn: Tự động bỏ tick mục "Chia cột" ngang mặc định khi mới mở bài để tránh xung đột với cuộn dọc và bố cục 50 | 50.
+- Tối ưu tốc độ cuộn: Điều chỉnh tốc độ cuộn gốc xuống 12 px/giây (mức 1x) giúp rảnh tay đệm đàn vừa nhịp hơn.
+- Làm mới giao diện & bộ icon: Chuyển toàn bộ icon sang dạng filled đồng bộ, căn chỉnh spacing lưới 4px và làm mới bộ icon cùng ảnh Chrome Web Store.
+```
+
+---
+
+### Chi tiết thay đổi đầy đủ (Dành cho GitHub Release Notes):
+
+#### Tính năng mới (Features)
+* **Nhảy thẳng vào bài hát (Direct Song Jump):**
+  * Tự động phân giải kết quả bài hát đầu tiên trên Hợp Âm Chuẩn (thử đảo cụm `Bài hát Ca sĩ` / `Ca sĩ Bài hát`) để nhảy thẳng vào trang `/song/...` khi mở panel trên video YouTube, bấm nút YouTube, Auto-Sync hoặc bấm vào Lịch sử.
+  * Nâng cấp cả các mục lịch sử cũ chưa có URL trực tiếp và tự gắn nhãn `Bài hát` / `Mở bài`.
+  * Ghi nhớ ánh xạ `videoId -> URL bài hát` vào `chrome.storage.local`; khi người dùng tìm tay lại và chọn một bài khác, mapping tự động được cập nhật theo lựa chọn mới.
+* **Tự động tắt "Chia cột" ngang mặc định trên Hợp Âm Chuẩn:**
+  * Content script tự bỏ tick `#tool-box-column-toggle` khi trang bài hát khởi tạo để giữ cuộn dọc mượt mà và tương thích với bố cục 50 | 50 của panel.
+
+#### Sửa lỗi & Cải thiện (Fixes & Improvements)
+* **Hiệu chỉnh tốc độ Auto-Scroll:** Giảm tốc độ cơ sở từ 32 px/s xuống 12 px/s ở mức `1x` (các mức `0.5x / 1x / 1.5x / 2x` tương ứng `6 / 12 / 18 / 24` px/s) và giới hạn `dt` tối đa 0.1s để tránh nhảy dòng khi chuyển focus.
+* **Làm mới UI & bộ Icon:** Chuyển icon giao diện sang SVG filled, chuẩn hóa spacing trên lưới 4px, cân lại bảng màu sáng/tối, làm mới bộ icon (khử răng cưa `4x4`, sửa hướng nút Play quay phải) và cập nhật lại toàn bộ ảnh `store-assets` cho Chrome Web Store.
+* **Đảm bảo rule `declarativeNetRequest`:** Bổ sung `ENSURE_FRAME_RULES` trong `background.js` để rule gỡ `X-Frame-Options` / `CSP` luôn sẵn sàng trước khi iframe điều hướng.
+
+---
+
 ## Phiên bản 0.2.0 (Bản phát hành chính thức - Khuyên dùng copy lên Store)
 
 ### Đoạn ngắn gọn (Dán nhanh vào Chrome Web Store):

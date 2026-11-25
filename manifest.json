@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Chord Side Panel - Hợp âm bên cạnh YouTube",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Xem Hợp Âm Chuẩn trong side panel cạnh video YouTube, tự động bắt tên bài, cuộn tự động và chia 2 cột.",
   "minimum_chrome_version": "116",
   "icons": {
